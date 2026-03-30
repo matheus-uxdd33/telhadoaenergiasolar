@@ -1,0 +1,151 @@
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease;
+}
+
+.dashboard h1 {
+  color: #1f2937;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card .value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e40af;
+  margin: 0;
+}
+
+.alerts-section {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.alerts-section h2 {
+  margin-bottom: 20px;
+  color: #1f2937;
+  font-size: 18px;
+}
+
+.alerts-list {
+  display: grid;
+  gap: 12px;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.alert-low {
+  border-left-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.alert-medium {
+  border-left-color: #f59e0b;
+  background-color: #fffbeb;
+}
+
+.alert-high {
+  border-left-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.alert-critical {
+  border-left-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.alert strong {
+  color: #1f2937;
+}
+
+.alert p {
+  margin: 8px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.alert small {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.sync-info {
+  text-align: right;
+  color: #9ca3af;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  color: #6b7280;
+  font-size: 18px;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  color: #dc2626;
+  font-size: 16px;
+}
+
+.no-data {
+  text-align: center;
+  color: #9ca3af;
+  padding: 30px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

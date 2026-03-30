@@ -1,0 +1,140 @@
+.alerts-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.alerts-page h1 {
+  margin-bottom: 30px;
+  color: #1f2937;
+  font-size: 32px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.filter-buttons button {
+  padding: 10px 20px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.filter-buttons button.active {
+  background-color: #1e40af;
+  color: white;
+  border-color: #1e40af;
+}
+
+.filter-buttons button:hover {
+  border-color: #1e40af;
+}
+
+.alerts-table {
+  display: grid;
+  gap: 15px;
+}
+
+.alert-row {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.alert-row:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.severity-low {
+  border-left-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.severity-medium {
+  border-left-color: #f59e0b;
+  background-color: #fffbeb;
+}
+
+.severity-high {
+  border-left-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.severity-critical {
+  border-left-color: #dc2626;
+  background-color: #7f1d1d;
+}
+
+.severity-critical .alert-header strong {
+  color: white;
+}
+
+.severity-critical p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.severity-critical small {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.alert-header strong {
+  color: #1f2937;
+  font-size: 16px;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.severity-low .badge {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.severity-medium .badge {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.severity-high .badge {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.severity-critical .badge {
+  background-color: #fecaca;
+  color: #7f1d1d;
+}
+
+.alert-row p {
+  color: #6b7280;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.alert-row small {
+  color: #9ca3af;
+  font-size: 12px;
+}

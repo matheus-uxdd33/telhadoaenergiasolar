@@ -1,0 +1,562 @@
+DESENHO DO SISTEMA — PLATAFORMA GLOBAL DE MONITORAMENTO SOLAR COM REVENDA E COMISSÃO
+
+BASE CONCEITUAL
+Este desenho do sistema foi estruturado a partir da estratégia descrita no material fornecido pelo usuário: transformar o negócio de energia solar em uma operação recorrente, baseada em monitoramento, automação, assinatura mensal, cadastro autônomo, suporte sob demanda, integração com fabricantes e expansão por meio de empresas parceiras e revendedoras.
+
+1. OBJETIVO DO SISTEMA
+
+O sistema será uma plataforma SaaS internacional para monitoramento e gestão de sistemas fotovoltaicos, com capacidade de:
+- receber clientes finais de vários países;
+- permitir cadastro automático;
+- identificar a marca e o modelo do inversor logo no início;
+- conectar a conta do cliente ao provedor/fabricante do inversor;
+- coletar dados técnicos automaticamente;
+- emitir alertas e relatórios;
+- operar em modelo de assinatura mensal;
+- permitir que empresas parceiras revendam a plataforma;
+- calcular comissão automática;
+- operar como white label para revendedores.
+
+O foco do sistema não será apenas mostrar gráficos, mas proteger a geração, evitar perdas, manter o sistema operacional e criar uma receita recorrente sustentável.
+
+2. VISÃO MACRO DA ARQUITETURA
+
+A arquitetura será dividida em camadas.
+
+CAMADA 1 — SITE PÚBLICO E AQUISIÇÃO
+Responsável por atrair clientes, apresentar os planos, permitir a escolha do idioma, do país, da moeda, do modelo do inversor e iniciar o cadastro.
+
+CAMADA 2 — CADASTRO E ONBOARDING
+Responsável por criar a conta do cliente, validar identidade, vincular o plano escolhido, conectar o inversor e ativar o ambiente interno do usuário.
+
+CAMADA 3 — NÚCLEO DE INTEGRAÇÃO
+Responsável por conversar com APIs de fabricantes, receber tokens, sincronizar dados, armazenar métricas e manter a atualização do sistema.
+
+CAMADA 4 — MOTOR DE MONITORAMENTO
+Responsável por comparar geração real versus geração esperada, identificar falhas, gerar alertas e classificar ocorrências.
+
+CAMADA 5 — PAINEL DO CLIENTE
+Responsável por exibir dados, relatórios, economia estimada, alertas, chamados, status do sistema e histórico.
+
+CAMADA 6 — PAINEL DO PARCEIRO / EMPRESA
+Responsável por dar acesso às empresas revendedoras, acompanhar clientes indicados, vendas, comissões, links exclusivos e desempenho da carteira.
+
+CAMADA 7 — BACKOFFICE ADMINISTRATIVO
+Responsável por governança, cobrança, suporte, análise de operações, auditoria, controle de parceiros, permissões e indicadores globais.
+
+3. FLUXO PRINCIPAL DO CLIENTE FINAL
+
+PASSO 1
+O cliente entra no site principal.
+
+PASSO 2
+Seleciona:
+- idioma;
+- país;
+- moeda;
+- tipo de usuário: residencial, comercial, parceiro ou empresa.
+
+PASSO 3
+O sistema pergunta:
+“Qual a marca do seu inversor?”
+“Qual o modelo do seu equipamento?”
+“Seu equipamento já possui aplicativo do fabricante?”
+
+PASSO 4
+O cliente escolhe o plano desejado:
+- Básico;
+- Profissional;
+- Premium;
+- Empresa.
+
+PASSO 5
+O cliente cria a conta:
+- nome;
+- email;
+- telefone ou WhatsApp;
+- senha;
+- país;
+- fuso horário;
+- endereço aproximado da unidade;
+- potência instalada;
+- distribuidora de energia;
+- tipo de instalação.
+
+PASSO 6
+O cliente conecta o equipamento por meio de uma das opções:
+- login com a conta do fabricante;
+- token API;
+- número serial do datalogger;
+- integração manual assistida;
+- dispositivo intermediário para equipamentos legados.
+
+PASSO 7
+O sistema valida a conexão, importa os dados iniciais e cria o painel individual.
+
+PASSO 8
+O cliente recebe:
+- dashboard liberado;
+- email de boas-vindas;
+- instruções iniciais;
+- status de sincronização;
+- previsão do primeiro relatório.
+
+4. FLUXO PRINCIPAL DA EMPRESA PARCEIRA / REVENDEDORA
+
+PASSO 1
+A empresa parceira entra na área “Seja Parceiro”.
+
+PASSO 2
+Preenche cadastro empresarial:
+- nome da empresa;
+- CNPJ ou registro internacional equivalente;
+- email comercial;
+- telefone;
+- país;
+- site;
+- responsável principal;
+- volume aproximado de clientes instalados;
+- interesse em white label ou revenda simples.
+
+PASSO 3
+O sistema aprova automaticamente ou envia para análise.
+
+PASSO 4
+Após aprovação, a empresa recebe:
+- painel do parceiro;
+- link de indicação exclusivo;
+- código de referência;
+- área de clientes indicados;
+- painel de comissões;
+- materiais de marketing;
+- acesso a campanhas e treinamentos.
+
+PASSO 5
+Quando um cliente compra através do link ou código da empresa, o sistema:
+- registra a origem;
+- vincula o cliente ao parceiro;
+- ativa o plano;
+- passa a calcular comissão recorrente.
+
+PASSO 6
+A empresa acompanha:
+- número de clientes ativos;
+- faturamento gerado;
+- comissões pendentes;
+- comissões pagas;
+- cancelamentos;
+- upgrades de planos.
+
+5. MÓDULOS FUNCIONAIS DO SISTEMA
+
+5.1 MÓDULO DE MARKETING E AQUISIÇÃO
+Funções:
+- landing pages por idioma;
+- funil de conversão;
+- páginas específicas por país;
+- páginas para empresas e parceiros;
+- prova social;
+- perguntas frequentes;
+- comparativos de planos;
+- materiais de revenda;
+- rastreamento de origem do lead;
+- cupom promocional e referral.
+
+5.2 MÓDULO DE CADASTRO E IDENTIDADE
+Funções:
+- criação de conta;
+- login tradicional;
+- login social, se desejado;
+- validação por email;
+- validação por SMS ou WhatsApp;
+- recuperação de senha;
+- gestão de consentimento;
+- aceite de termos e privacidade.
+
+5.3 MÓDULO DE SELEÇÃO DE EQUIPAMENTO
+Funções:
+- catálogo de fabricantes;
+- catálogo de modelos;
+- busca por marca;
+- busca por país ou região;
+- agrupamento de equipamentos compatíveis;
+- indicação de conectividade disponível;
+- seleção de método de conexão.
+
+Fabricantes que poderão entrar na fase inicial:
+- Growatt;
+- Deye;
+- Solarman;
+- GoodWe;
+- Sungrow;
+- Huawei;
+- Fronius;
+- Solis;
+- Hoymiles;
+- SAJ;
+- integrações genéricas para equipamentos chineses com gateway ou Modbus.
+
+5.4 MÓDULO DE INTEGRAÇÃO COM PROVEDORES
+Funções:
+- autenticação via login e senha;
+- autenticação via token;
+- armazenamento seguro de credenciais;
+- renovação de token;
+- sincronização periódica;
+- importação do histórico;
+- tratamento de falhas de autenticação;
+- logs técnicos.
+
+Observação importante:
+Não haverá uma API exclusiva para cada cliente. Haverá um conjunto de integrações centrais por fabricante. O que muda por cliente são suas credenciais, permissões e ativos vinculados.
+
+5.5 MÓDULO DE MONITORAMENTO
+Funções:
+- leitura automática de geração;
+- leitura de status do inversor;
+- leitura de alarmes;
+- leitura de temperatura;
+- leitura de energia diária, mensal e acumulada;
+- monitoramento de conectividade;
+- comparação com baseline esperado;
+- análise de anomalias;
+- identificação de sistema parado;
+- identificação de geração abaixo do esperado;
+- classificação de severidade.
+
+5.6 MÓDULO DE ALERTAS
+Funções:
+- envio de alerta em tempo real;
+- classificação: informativo, atenção, crítico;
+- notificação por email;
+- notificação por WhatsApp;
+- notificação push;
+- criação automática de chamado;
+- escalonamento para suporte técnico;
+- trilha de resolução.
+
+5.7 MÓDULO DE RELATÓRIOS
+Funções:
+- relatório mensal PDF;
+- relatório semanal opcional;
+- economia estimada;
+- disponibilidade do sistema;
+- alertas do período;
+- eventos resolvidos;
+- desempenho comparado com esperado;
+- recomendações de manutenção;
+- sugestões de upgrade.
+
+5.8 MÓDULO DE COBRANÇA
+Funções:
+- cobrança recorrente;
+- planos por região;
+- moedas diferentes;
+- emissão de recibos;
+- status de pagamento;
+- tentativa automática de recobrança;
+- suspensão por inadimplência;
+- upgrade e downgrade de plano;
+- comissão do parceiro;
+- split de pagamento quando aplicável.
+
+5.9 MÓDULO DE PARCEIROS E COMISSÕES
+Funções:
+- cadastro de parceiros;
+- links exclusivos;
+- cupons;
+- atribuição de origem;
+- regras de comissão;
+- comissão fixa ou percentual;
+- comissão na entrada;
+- comissão recorrente;
+- histórico financeiro;
+- saques e repasses.
+
+5.10 MÓDULO WHITE LABEL
+Funções:
+- subdomínio por parceiro;
+- logo personalizada;
+- cores da marca;
+- ambiente próprio;
+- política comercial própria;
+- painel com identidade visual própria;
+- equipe própria com acessos separados.
+
+5.11 MÓDULO DE SUPORTE E CHAMADOS
+Funções:
+- abertura automática ou manual de chamados;
+- categorização;
+- SLA;
+- histórico de atendimento;
+- anexos;
+- status da ocorrência;
+- encaminhamento a técnico local;
+- central de suporte.
+
+5.12 MÓDULO ADMINISTRATIVO
+Funções:
+- gestão global de usuários;
+- gestão de fabricantes;
+- gestão de integrações;
+- gestão de parceiros;
+- gestão de planos e preços;
+- auditoria;
+- dashboards executivos;
+- visão global do MRR;
+- churn;
+- taxa de ativação;
+- quantidade de sistemas monitorados;
+- eventos críticos globais.
+
+6. DESENHO DE TENANCY E ISOLAMENTO DE DADOS
+
+O sistema deverá ser multi-tenant.
+
+Isso significa que:
+- haverá uma estrutura única de plataforma;
+- vários clientes e empresas usarão o mesmo sistema;
+- os dados serão isolados por tenant_id;
+- um cliente não verá dados de outro;
+- uma empresa parceira verá apenas sua carteira;
+- o administrador global poderá ver tudo conforme permissão.
+
+Tipos de tenant:
+- tenant cliente final;
+- tenant empresa revendedora;
+- tenant white label;
+- tenant administrador global.
+
+Cada tenant terá:
+- usuários;
+- instalações;
+- planos;
+- relatórios;
+- alertas;
+- permissões;
+- configurações visuais e regionais.
+
+7. EXPERIÊNCIA INTERNACIONAL
+
+Como muitos equipamentos são fabricados ou amplamente distribuídos por marcas chinesas, o sistema poderá atender clientes internacionais desde o início, desde que a integração exista ou que seja possível utilizar um gateway compatível.
+
+Para operação internacional o sistema deverá suportar:
+- múltiplos idiomas;
+- múltiplas moedas;
+- múltiplos fusos horários;
+- formatos locais de telefone e endereço;
+- políticas de pagamento regionais;
+- regras de impostos e contratos por país;
+- catálogo de fabricantes por região.
+
+Estratégia internacional:
+- começar com mercados em que marcas chinesas são populares;
+- oferecer página de entrada por idioma;
+- padronizar a integração com fabricantes internacionais;
+- estruturar atendimento digital e suporte sob demanda;
+- expandir via empresas parceiras locais.
+
+8. ESTRUTURA TÉCNICA RECOMENDADA
+
+FRONTEND
+- site institucional;
+- landing pages;
+- área de cadastro;
+- dashboard do cliente;
+- dashboard do parceiro;
+- painel administrativo.
+
+BACKEND
+- API principal;
+- serviço de autenticação;
+- serviço de billing;
+- serviço de tenants;
+- serviço de integrações;
+- serviço de monitoramento;
+- serviço de alertas;
+- serviço de relatórios;
+- serviço de parceiros e comissões.
+
+BANCO DE DADOS
+Tabelas ou coleções principais:
+- users;
+- tenants;
+- companies;
+- customer_sites;
+- inverter_brands;
+- inverter_models;
+- provider_connections;
+- telemetry_events;
+- alerts;
+- reports;
+- subscriptions;
+- invoices;
+- commissions;
+- referrals;
+- support_tickets;
+- audit_logs.
+
+FILAS E PROCESSAMENTO ASSÍNCRONO
+- sincronização periódica com fabricantes;
+- geração de relatórios;
+- envio de notificações;
+- cálculo de comissão;
+- reprocessamento de falhas.
+
+ARMAZENAMENTO
+- documentos;
+- PDFs;
+- anexos;
+- logs exportáveis.
+
+9. REGRAS DE NEGÓCIO IMPORTANTES
+
+REGRA 1
+O cliente deve selecionar o equipamento antes de entrar na conexão. Isso reduz erro e direciona corretamente a integração.
+
+REGRA 2
+Cada conexão com provedor deve ser validada e testada antes da ativação do monitoramento.
+
+REGRA 3
+A cobrança deverá começar apenas após a ativação bem-sucedida do serviço ou após o término do período de teste.
+
+REGRA 4
+A comissão da empresa parceira deve ser calculada com base na regra do plano e na origem do cliente.
+
+REGRA 5
+Se o cliente cancelar, o sistema deverá interromper novas cobranças e ajustar a comissão recorrente futura.
+
+REGRA 6
+Se o parceiro usar white label, ele poderá ter identidade visual própria, mas continuará operando sobre a infraestrutura central.
+
+REGRA 7
+Os dados sensíveis do provedor deverão ser protegidos com criptografia e boas práticas de segurança.
+
+10. JORNADA DE MARKETING PARA EMPRESAS
+
+A plataforma não dependerá apenas de anúncios para clientes finais. Ela poderá crescer acelerando por canal B2B.
+
+Estratégia:
+- atrair empresas instaladoras que já têm carteira de clientes;
+- oferecer comissão recorrente;
+- oferecer painel para acompanhamento;
+- entregar material de revenda;
+- oferecer white label para empresas maiores;
+- permitir que a empresa monetize sua base sem instalar novo sistema.
+
+Mensagem central para empresas:
+“Você já instalou clientes. Agora pode continuar faturando com eles todos os meses por meio do monitoramento, dos alertas e da gestão contínua.”
+
+11. DESENHO DE TELAS PRINCIPAIS
+
+TELA 1 — HOME
+- proposta de valor;
+- escolha de idioma;
+- escolha de país;
+- botão começar;
+- botão ser parceiro;
+- seção como funciona;
+- seção benefícios;
+- seção fabricantes compatíveis.
+
+TELA 2 — ESCOLHA DO EQUIPAMENTO
+- seleção de marca;
+- seleção de modelo;
+- busca inteligente;
+- indicação de compatibilidade;
+- botão continuar.
+
+TELA 3 — ESCOLHA DO PLANO
+- comparação de planos;
+- preço mensal;
+- benefícios;
+- botão assinar.
+
+TELA 4 — CRIAÇÃO DE CONTA
+- nome;
+- email;
+- telefone;
+- senha;
+- país;
+- aceite de termos.
+
+TELA 5 — CONEXÃO COM PROVEDOR
+- método de integração;
+- login/senha ou token;
+- teste de conexão;
+- confirmação.
+
+TELA 6 — DASHBOARD DO CLIENTE
+- resumo da geração;
+- status do sistema;
+- alertas;
+- economia estimada;
+- relatórios;
+- suporte.
+
+TELA 7 — PAINEL DO PARCEIRO
+- clientes ativos;
+- novas vendas;
+- comissão do mês;
+- links de indicação;
+- campanhas disponíveis.
+
+TELA 8 — ADMIN GLOBAL
+- total de assinaturas;
+- MRR;
+- churn;
+- alertas críticos globais;
+- parceiros;
+- relatórios operacionais.
+
+12. FASES DE IMPLEMENTAÇÃO
+
+FASE 1 — MVP
+- site principal;
+- cadastro de cliente;
+- seleção de fabricante e modelo;
+- integração com 2 a 4 fabricantes principais;
+- dashboard básico;
+- alerta básico;
+- cobrança recorrente;
+- painel simples de parceiro.
+
+FASE 2 — EXPANSÃO
+- mais fabricantes;
+- relatórios PDF automáticos;
+- WhatsApp;
+- onboarding mais fluido;
+- mais moedas;
+- mais idiomas;
+- regras avançadas de comissão.
+
+FASE 3 — WHITE LABEL
+- subdomínios;
+- identidade visual por parceiro;
+- gestão de equipe do parceiro;
+- planos empresariais.
+
+FASE 4 — ESCALA INTERNACIONAL
+- suporte multirregional;
+- regras fiscais;
+- módulos avançados;
+- integrações com hardware legado;
+- marketplace de técnicos locais.
+
+13. RESULTADO ESPERADO
+
+Ao final, o sistema permitirá que:
+- o cliente final se cadastre sozinho;
+- o cliente escolha o modelo do seu equipamento no início do site;
+- o cliente conecte o provedor do fabricante;
+- a plataforma monitore e cobre automaticamente;
+- empresas revendam o serviço;
+- parceiros ganhem porcentagem recorrente;
+- a operação possa atender mercados internacionais;
+- a receita deixe de depender só de venda de instalação.
+
+14. CONCLUSÃO
+
+Este desenho do sistema posiciona a operação como uma plataforma global de serviços contínuos em energia solar, e não apenas como uma empresa de instalação. O valor principal passa a ser recorrência, monitoramento, proteção da geração, revenda por empresas, expansão internacional e escalabilidade tecnológica.
+
+Esse modelo é especialmente forte porque aproveita uma base já instalada de sistemas fotovoltaicos, muitos deles equipados com fabricantes amplamente distribuídos, inclusive chineses, e transforma essa base em uma nova camada de receita por assinatura.

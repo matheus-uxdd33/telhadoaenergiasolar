@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+.netlify/
+.DS_Store
+*.log
+frontend/dist/
+backend/dist/

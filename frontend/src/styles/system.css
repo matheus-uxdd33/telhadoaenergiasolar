@@ -1,0 +1,78 @@
+.system-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.system-page h1 {
+  margin-bottom: 30px;
+  color: #1f2937;
+  font-size: 32px;
+}
+
+.system-info {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-group p {
+  font-size: 18px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #1e40af;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #1e3a8a;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(30, 64, 175, 0.3);
+}
+
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}
