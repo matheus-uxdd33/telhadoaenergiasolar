@@ -4,16 +4,15 @@ class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
-    const apiBase = typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL 
-      ? import.meta.env.VITE_API_BASE_URL 
+    const apiBase = typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL
+      ? import.meta.env.VITE_API_BASE_URL
       : "/api";
-    
+
     this.client = axios.create({
       baseURL: apiBase,
       timeout: 10000,
     });
 
-    // Interceptor para adicionar token
     this.client.interceptors.request.use((config) => {
       const token = localStorage.getItem("token");
       if (token) {
@@ -23,8 +22,23 @@ class ApiClient {
     });
   }
 
+  async register(email: string, password: string, name?: string) {
+    const res = await this.client.post("/auth/register", { email, password, name });
+    return res.data;
+  }
+
   async login(email: string, password: string) {
     const res = await this.client.post("/auth/login", { email, password });
+    return res.data;
+  }
+
+  async getMe() {
+    const res = await this.client.get("/auth/me");
+    return res.data;
+  }
+
+  async logout() {
+    const res = await this.client.post("/auth/logout");
     return res.data;
   }
 
