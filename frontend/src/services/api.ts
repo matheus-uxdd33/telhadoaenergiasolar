@@ -4,8 +4,12 @@ class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
+    const apiBase = typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL 
+      ? import.meta.env.VITE_API_BASE_URL 
+      : "/api";
+    
     this.client = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
+      baseURL: apiBase,
       timeout: 10000,
     });
 

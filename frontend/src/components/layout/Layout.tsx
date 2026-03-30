@@ -1,6 +1,6 @@
 import React from "react";
-import { useAuthStore } from "../store/auth";
-import "../styles/layout.css";
+import { useAuthStore } from "../../store/auth";
+import "../../styles/layout.css";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,8 +8,8 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
-  const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
+  const user = useAuthStore((s: any) => s.user);
+  const logout = useAuthStore((s: any) => s.logout);
 
   return (
     <div className="layout">

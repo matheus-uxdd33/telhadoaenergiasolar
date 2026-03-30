@@ -8,7 +8,7 @@ interface TokenPayload {
 
 export const generateToken = (payload: TokenPayload, expiresIn = "24h"): string => {
   const secret = process.env.JWT_SECRET || "super-secret-demo-key";
-  return jwt.sign(payload, secret, { expiresIn });
+  return jwt.sign(payload, secret, { expiresIn } as any);
 };
 
 export const verifyToken = (token: string): TokenPayload => {

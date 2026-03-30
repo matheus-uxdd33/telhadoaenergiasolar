@@ -9,7 +9,7 @@ import AlertsPage from "./pages/Alerts";
 import "./styles/layout.css";
 
 export default function App() {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAuthenticated = useAuthStore((s: any) => s.isAuthenticated);
 
   return (
     <Router>
