@@ -42,6 +42,26 @@ class ApiClient {
     return res.data;
   }
 
+  async getPlans() {
+    const res = await this.client.get("/billing/plans");
+    return res.data;
+  }
+
+  async getCurrentPlan() {
+    const res = await this.client.get("/billing/current");
+    return res.data;
+  }
+
+  async createCheckout(planCode: string, paymentMethod: "pix" | "card") {
+    const res = await this.client.post("/billing/checkout", { planCode, paymentMethod });
+    return res.data;
+  }
+
+  async confirmDevelopmentPayment(paymentId: string) {
+    const res = await this.client.post(`/billing/payments/${paymentId}/confirm-dev`);
+    return res.data;
+  }
+
   async getDashboardSummary() {
     const res = await this.client.get("/dashboard/summary");
     return res.data;
@@ -59,6 +79,21 @@ class ApiClient {
 
   async getSystem() {
     const res = await this.client.get("/system");
+    return res.data;
+  }
+
+  async getInverterBrands() {
+    const res = await this.client.get("/system/brands");
+    return res.data;
+  }
+
+  async testSystemConnection(data: any) {
+    const res = await this.client.post("/system/test-connection", data);
+    return res.data;
+  }
+
+  async updateSystemCredentials(data: any) {
+    const res = await this.client.put("/system/credentials", data);
     return res.data;
   }
 

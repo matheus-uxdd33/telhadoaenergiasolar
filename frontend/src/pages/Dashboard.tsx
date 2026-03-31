@@ -1,26 +1,25 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import { DashboardSummary, ChartData, Alert } from "../types";
+import { DashboardSummary, Alert, SubscriptionState } from "../types";
 import "../styles/dashboard.css";
 
 export default function DashboardPage() {
   const [summary, setSummary] = React.useState<DashboardSummary | null>(null);
-  const [charts, setCharts] = React.useState<ChartData | null>(null);
   const [alerts, setAlerts] = React.useState<Alert[]>([]);
+  const [subscription, setSubscription] = React.useState<SubscriptionState | null>(null);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const loadDashboard = async () => {
       try {
-        const [summaryRes, chartsRes, alertsRes] = await Promise.all([
+        const [summaryRes, alertsRes, currentPlanRes] = await Promise.all([
           api.getDashboardSummary(),
-          api.getDashboardCharts(),
           api.getAlerts(),
+          api.getCurrentPlan(),
         ]);
         setSummary(summaryRes);
-        setCharts(chartsRes);
         setAlerts(alertsRes.alerts || []);
+        setSubscription(currentPlanRes.subscription || null);
       } catch (err) {
         console.error("Erro ao carregar dashboard:", err);
       } finally {
@@ -47,9 +46,18 @@ export default function DashboardPage() {
     }
   };
 
+  const hasHistory = subscription?.features?.includes("history");
+
   return (
     <div className="dashboard">
       <h1>Dashboard do Sistema Solar</h1>
+
+      {subscription && (
+        <div className="plan-banner">
+          <strong>Plano atual:</strong> {subscription.planName} · <b>{subscription.status}</b>
+          {!hasHistory && <span> — este plano mostra geração atual e sinais de emergência.</span>}
+        </div>
+      )}
 
       <div className="cards-grid">
         <div
@@ -70,20 +78,30 @@ export default function DashboardPage() {
           <p className="value">{summary.todayGeneration.toFixed(2)} kWh</p>
         </div>
 
-        <div className="card">
-          <h3>Geração Este Mês</h3>
-          <p className="value">{summary.monthGeneration.toFixed(2)} kWh</p>
-        </div>
+        {hasHistory ? (
+          <>
+            <div className="card">
+              <h3>Geração Este Mês</h3>
+              <p className="value">{summary.monthGeneration.toFixed(2)} kWh</p>
+            </div>
 
-        <div className="card">
-          <h3>Economia Estimada</h3>
-          <p className="value">R$ {summary.estimatedSavings.toFixed(2)}</p>
-        </div>
+            <div className="card">
+              <h3>Economia Estimada</h3>
+              <p className="value">R$ {summary.estimatedSavings.toFixed(2)}</p>
+            </div>
 
-        <div className="card">
-          <h3>Disponibilidade</h3>
-          <p className="value">{summary.systemAvailability.toFixed(1)}%</p>
-        </div>
+            <div className="card">
+              <h3>Disponibilidade</h3>
+              <p className="value">{summary.systemAvailability.toFixed(1)}%</p>
+            </div>
+          </>
+        ) : (
+          <div className="card upgrade-card">
+            <h3>Upgrade recomendado</h3>
+            <p className="value">Plano completo</p>
+            <p className="upgrade-text">Desbloqueie histórico, relatórios e suporte em `Planos`.</p>
+          </div>
+        )}
       </div>
 
       <div className="alerts-section">

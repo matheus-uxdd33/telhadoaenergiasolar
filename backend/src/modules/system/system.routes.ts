@@ -1,31 +1,68 @@
 import { Router, Response } from "express";
+import { z } from "zod";
 import { AuthRequest } from "../../common/middlewares/auth.middleware";
+import {
+  getSystemInfo,
+  listSupportedProviders,
+  saveSystemConfiguration,
+  testInverterConnection,
+} from "./system.service";
 
 const router = Router();
 
-// GET /api/system
-router.get("/", (req: AuthRequest, res: Response) => {
-  res.json({
-    inverterBrand: "Growatt",
-    inverterModel: "SPF 5000-3",
-    installedPower: 5000,
-    location: "São Paulo, SP",
-    distributor: "ENEL",
-    connectionMethod: "WiFi",
-    lastSync: new Date().toISOString(),
-    connectionStatus: "connected",
+const connectionSchema = z.object({
+  brandCode: z.string().min(1, "Marca obrigatória"),
+  model: z.string().min(1, "Modelo obrigatório"),
+  installedPower: z.coerce.number().min(0, "Potência inválida"),
+  location: z.string().min(2, "Localização obrigatória"),
+  distributor: z.string().min(2, "Distribuidora obrigatória"),
+  authMethod: z.enum(["credentials", "token", "serial", "manual_assisted"]),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  apiToken: z.string().optional(),
+  apiBaseUrl: z.string().optional(),
+  deviceId: z.string().optional(),
+});
+
+router.get("/", async (req: AuthRequest, res: Response) => {
+  const system = await getSystemInfo(req.user);
+  res.json(system);
+});
+
+router.get("/brands", (_req: AuthRequest, res: Response) => {
+  res.json({ brands: listSupportedProviders() });
+});
+
+router.post("/test-connection", async (req: AuthRequest, res: Response) => {
+  const parsed = connectionSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
+  }
+
+  const result = await testInverterConnection(parsed.data);
+  return res.json(result);
+});
+
+router.put("/credentials", async (req: AuthRequest, res: Response) => {
+  const parsed = connectionSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
+  }
+
+  if (!req.user) {
+    return res.status(401).json({ error: "Usuário não autenticado." });
+  }
+
+  const result = await saveSystemConfiguration(req.user, parsed.data);
+
+  return res.json({
+    success: true,
+    message: result.testResult.message || "Integração do inversor atualizada.",
+    test: result.testResult,
+    system: result.system,
   });
-});
-
-// POST /api/system/test-connection
-router.post("/test-connection", (req: AuthRequest, res: Response) => {
-  res.json({ success: true, message: "Conexão testada com sucesso" });
-});
-
-// PUT /api/system/credentials
-router.put("/credentials", (req: AuthRequest, res: Response) => {
-  const { username, password } = req.body;
-  res.json({ success: true, message: "Credenciais atualizadas" });
 });
 
 export default router;

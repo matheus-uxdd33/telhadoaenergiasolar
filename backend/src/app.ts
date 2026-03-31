@@ -6,6 +6,7 @@ import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import systemRoutes from "./modules/system/system.routes";
 import alertsRoutes from "./modules/alerts/alerts.routes";
 import profileRoutes from "./modules/profile/profile.routes";
+import billingRoutes, { billingWebhookHandler } from "./modules/billing/billing.routes";
 import { authenticate } from "./common/middlewares/auth.middleware";
 import { errorHandler } from "./common/middlewares/error.middleware";
 
@@ -19,11 +20,13 @@ app.use(cors({
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.post("/api/billing/webhook/pagbank", billingWebhookHandler);
 app.use("/api", authenticate);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/system", systemRoutes);
 app.use("/api/alerts", alertsRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/billing", billingRoutes);
 
 app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });

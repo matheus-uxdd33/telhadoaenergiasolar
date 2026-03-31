@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabase, supabaseAdmin, hasSupabaseEnv } from "../../database/supabase";
 import { authenticate, AuthRequest } from "../../common/middlewares/auth.middleware";
 import { generateToken } from "../../common/utils/jwt";
+import { getPlanByCode } from "../billing/plans";
 
 const router = Router();
 
@@ -40,12 +41,16 @@ router.post("/register", async (req: Request, res: Response) => {
     user_metadata: {
       name: name || email.split("@")[0],
       tenant_id: tenantId || "tenant-demo",
+      plan_code: "emergency_7d",
+      plan_status: "trial",
     },
   });
 
   if (error) {
     return res.status(400).json({ error: error.message });
   }
+
+  const plan = getPlanByCode(data.user.user_metadata?.plan_code as string | undefined);
 
   return res.status(201).json({
     message: "Usuário criado com sucesso no Supabase Auth",
@@ -54,6 +59,9 @@ router.post("/register", async (req: Request, res: Response) => {
       email: data.user.email,
       name: data.user.user_metadata?.name || name || email.split("@")[0],
       tenantId: data.user.user_metadata?.tenant_id || tenantId || "tenant-demo",
+      planCode: plan.code,
+      planStatus: data.user.user_metadata?.plan_status || "trial",
+      features: plan.features,
     },
   });
 });
@@ -74,6 +82,8 @@ router.post("/login", async (req: Request, res: Response) => {
       email,
     });
 
+    const plan = getPlanByCode("emergency_7d");
+
     return res.json({
       token,
       refreshToken: null,
@@ -82,6 +92,9 @@ router.post("/login", async (req: Request, res: Response) => {
         email,
         name: email.split("@")[0] || "Cliente",
         tenantId: "tenant-demo",
+        planCode: plan.code,
+        planStatus: "trial",
+        features: plan.features,
       },
       mode: "demo",
       message: "Supabase não configurado; login demo liberado para desenvolvimento local.",
@@ -97,6 +110,8 @@ router.post("/login", async (req: Request, res: Response) => {
     return res.status(401).json({ error: error?.message || "Falha ao autenticar no Supabase" });
   }
 
+  const plan = getPlanByCode(data.user.user_metadata?.plan_code as string | undefined);
+
   return res.json({
     token: data.session.access_token,
     refreshToken: data.session.refresh_token,
@@ -105,11 +120,13 @@ router.post("/login", async (req: Request, res: Response) => {
       email: data.user.email,
       name: data.user.user_metadata?.name || email.split("@")[0] || "Cliente",
       tenantId: data.user.user_metadata?.tenant_id || "tenant-demo",
+      planCode: plan.code,
+      planStatus: data.user.user_metadata?.plan_status || "trial",
+      features: plan.features,
     },
     mode: "supabase",
   });
 });
-
 router.get("/me", authenticate, (req: AuthRequest, res: Response) => {
   return res.json({ user: req.user });
 });

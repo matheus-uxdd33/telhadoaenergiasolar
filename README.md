@@ -38,3 +38,15 @@ npm run dev
 - Suporte
 - Perfil
 - Integrações
+
+## 📚 Documentação para Usuários
+
+### 🚀 **Para Usuários Novos**
+- **[GUIA_USUARIO_NOVO.md](GUIA_USUARIO_NOVO.md)** — Passo a passo completo
+- **[FLUXO_USUARIO.md](FLUXO_USUARIO.md)** — Fluxo visual simplificado
+- **[FAQ_USUARIO.md](FAQ_USUARIO.md)** — Perguntas frequentes
+
+### 🔧 **Para Desenvolvedores**
+- **[GUIA_INVERSOR.md](GUIA_INVERSOR.md)** — Como configurar inversores
+- **[INTEGRACAO_INVERSORES.md](INTEGRACAO_INVERSORES.md)** — APIs e integrações
+- **[SISTEMA_FUNCIONANDO.md](SISTEMA_FUNCIONANDO.md)** — Status do sistema

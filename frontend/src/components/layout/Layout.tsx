@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import { useAuthStore } from "../../store/auth";
 import "../../styles/layout.css";
 
@@ -22,13 +23,13 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         <nav className="sidebar-nav">
-          <a href="/dashboard">📊 Dashboard</a>
-          <a href="/system">⚙️ Meu Sistema</a>
-          <a href="/alerts">⚠️ Alertas</a>
-          <a href="/reports">📄 Relatórios</a>
-          <a href="/billing">💰 Faturas</a>
-          <a href="/support">🎧 Suporte</a>
-          <a href="/profile">👤 Perfil</a>
+          <NavLink to="/dashboard">📊 Dashboard</NavLink>
+          <NavLink to="/system">⚙️ Meu Sistema</NavLink>
+          <NavLink to="/alerts">⚠️ Alertas</NavLink>
+          <NavLink to="/reports">📄 Relatórios</NavLink>
+          <NavLink to="/billing">💳 Planos</NavLink>
+          <NavLink to="/support">🎧 Suporte</NavLink>
+          <NavLink to="/profile">👤 Perfil</NavLink>
         </nav>
 
         <div className="sidebar-footer">
@@ -43,6 +44,7 @@ export default function Layout({ children }: LayoutProps) {
           <h3>Bem-vindo, {user?.name}!</h3>
           <div className="header-info">
             <span>{user?.email}</span>
+            {user?.planCode && <span className="plan-pill">Plano: {user.planCode}</span>}
           </div>
         </header>
 

@@ -6,6 +6,7 @@ import LoginPage from "./pages/Login";
 import DashboardPage from "./pages/Dashboard";
 import SystemPage from "./pages/System";
 import AlertsPage from "./pages/Alerts";
+import BillingPage from "./pages/Billing";
 import "./styles/layout.css";
 
 export default function App() {
@@ -26,7 +27,7 @@ export default function App() {
                   <Route path="/system" element={<SystemPage />} />
                   <Route path="/alerts" element={<AlertsPage />} />
                   <Route path="/reports" element={<div>📄 Relatórios (em breve)</div>} />
-                  <Route path="/billing" element={<div>💰 Faturas (em breve)</div>} />
+                  <Route path="/billing" element={<BillingPage />} />
                   <Route path="/support" element={<div>🎧 Suporte (em breve)</div>} />
                   <Route path="/profile" element={<div>👤 Perfil (em breve)</div>} />
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />

@@ -1,20 +1,22 @@
 import React from "react";
 import api from "../services/api";
-import { Alert } from "../types";
+import { Alert, SubscriptionState } from "../types";
 import "../styles/alerts.css";
 
 export default function AlertsPage() {
   const [alerts, setAlerts] = React.useState<Alert[]>([]);
   const [filteredAlerts, setFilteredAlerts] = React.useState<Alert[]>([]);
+  const [subscription, setSubscription] = React.useState<SubscriptionState | null>(null);
   const [filter, setFilter] = React.useState<string>("all");
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const loadAlerts = async () => {
       try {
-        const res = await api.getAlerts();
+        const [res, billingRes] = await Promise.all([api.getAlerts(), api.getCurrentPlan()]);
         setAlerts(res.alerts || []);
         setFilteredAlerts(res.alerts || []);
+        setSubscription(billingRes.subscription || null);
       } catch (err) {
         console.error("Erro ao carregar alertas:", err);
       } finally {
@@ -39,6 +41,12 @@ export default function AlertsPage() {
   return (
     <div className="alerts-page">
       <h1>Alertas do Sistema</h1>
+
+      {subscription?.planCode === "emergency_7d" && (
+        <div className="plan-info-banner">
+          Seu plano atual mostra apenas <strong>sinais de emergência</strong> e alertas críticos.
+        </div>
+      )}
 
       <div className="filter-buttons">
         <button
