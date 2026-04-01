@@ -120,31 +120,32 @@ export default function SystemPage() {
     }
   };
 
-  if (loading) return <div className="loading">Carregando...</div>;
-  if (!system) return <div className="error">Erro ao carregar dados</div>;
+  if (loading) return <div className="loading">Carregando configurações do sistema...</div>;
+  if (!system) return <div className="error">Ops! Falha ao carregar as informações do sistema.</div>;
 
-  const statusColor =
-    system.connectionStatus === "connected"
-      ? "#10b981"
-      : system.connectionStatus === "pending"
-        ? "#f59e0b"
-        : "#ef4444";
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "connected": return "#10b981";
+      case "pending": return "#f59e0b";
+      default: return "#ef4444";
+    }
+  };
 
   return (
     <div className="system-page">
-      <h1>Meu Sistema Solar</h1>
+      <h1>Configurações do Sistema</h1>
 
-      {system.note && <div className="system-banner">{system.note}</div>}
+      {system.note && <div className="system-banner"><span className="icon">ℹ️</span> {system.note}</div>}
       {feedback && <div className={`feedback-banner ${feedback.type}`}>{feedback.message}</div>}
 
-      <div className="system-info">
+      <div className="system-info-grid">
         <div className="info-group">
           <label>Marca do Inversor</label>
           <p>{system.inverterBrand}</p>
         </div>
 
         <div className="info-group">
-          <label>Modelo</label>
+          <label>Modelo do Equipamento</label>
           <p>{system.inverterModel}</p>
         </div>
 
@@ -164,110 +165,55 @@ export default function SystemPage() {
         </div>
 
         <div className="info-group">
-          <label>Método de Conexão</label>
-          <p>{system.connectionMethod}</p>
-        </div>
-
-        <div className="info-group">
           <label>Status da Conexão</label>
-          <p style={{ color: statusColor, fontWeight: "bold" }}>
+          <p style={{ color: getStatusColor(system.connectionStatus) }}>
             {system.connectionStatus === "connected"
               ? "● Conectado"
               : system.connectionStatus === "pending"
-                ? "● Em validação"
+                ? "● Validando"
                 : "● Desconectado"}
           </p>
         </div>
+      </div>
 
-        <div className="info-group">
-          <label>Última Sincronização</label>
-          <p>{new Date(system.lastSync).toLocaleString("pt-BR")}</p>
+      <div className="brand-selection-area">
+        <h2 className="brand-selection-title">1. Selecione o Fabricante</h2>
+        <div className="brands-grid">
+          {brands.map((brand) => (
+            <div
+              key={brand.code}
+              className={`brand-card ${form.brandCode === brand.code ? 'active' : ''}`}
+              onClick={() => handleBrandChange(brand.code)}
+            >
+              <div className="brand-card-top">
+                <h4>{brand.name}</h4>
+                <span className="confirm-icon">✅</span>
+              </div>
+              <span>{brand.models?.length || 0} modelos suportados</span>
+              {brand.note && <span className="brand-note">{brand.note.split(":")[0]}</span>}
+            </div>
+          ))}
         </div>
       </div>
 
-      {system.setupRequired && (
-        <>
-          <div style={{ marginBottom: "30px" }}>
-            <h2 style={{ marginBottom: "16px", color: "#1f2937", fontSize: "20px", fontWeight: "600" }}>
-              Selecionar marca do inversor
-            </h2>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-                gap: "16px",
-                marginBottom: "24px",
-              }}
-            >
-              {brands.map((brand) => (
-                <div
-                  key={brand.code}
-                  onClick={() => handleBrandChange(brand.code)}
-                  style={{
-                    padding: "18px 16px",
-                    border: form.brandCode === brand.code ? "2px solid #10b981" : "1px solid #e5e7eb",
-                    borderRadius: "10px",
-                    background: form.brandCode === brand.code ? "#ecfdf5" : "white",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    boxShadow: form.brandCode === brand.code ? "0 2px 8px rgba(16, 185, 129, 0.15)" : "none",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (form.brandCode !== brand.code) {
-                      e.currentTarget.style.borderColor = "#d1d5db";
-                      e.currentTarget.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.05)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (form.brandCode !== brand.code) {
-                      e.currentTarget.style.borderColor = "#e5e7eb";
-                      e.currentTarget.style.boxShadow = "none";
-                    }
-                  }}
-                >
-                  <div style={{ fontWeight: "600", color: "#1f2937", marginBottom: "6px", fontSize: "16px" }}>
-                    {brand.name}
-                  </div>
-                  <div style={{ fontSize: "12px", color: "#6b7280", marginBottom: "8px" }}>
-                    {brand.models?.length || 0} modelos
-                  </div>
-                  {brand.note && (
-                    <div
-                      style={{ fontSize: "11px", color: "#059669", fontStyle: "italic", marginTop: "6px" }}
-                    >
-                      ✓ {brand.note.split(":")[0]}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
       <div className="connection-panel">
-        <div className="panel-header">
-          <div>
-            <h2>Configurar Inversor {selectedBrand?.name}</h2>
-            <p>Informe as credenciais do portal ou token da API e valide a conexão.</p>
-          </div>
-          {selectedBrand?.note && <span className="provider-note">{selectedBrand.note}</span>}
-        </div>
+        <header className="panel-header">
+          <h2>2. Configurar Integração {selectedBrand?.name}</h2>
+          <p>Informe as credenciais de acesso ou tokens para sincronizar os dados.</p>
+        </header>
 
         <div className="connection-form">
           <div className="form-group">
-            <label>Modelo</label>
+            <label>Modelo do Inversor</label>
             <select value={form.model} onChange={(e) => handleField("model", e.target.value)}>
               {(selectedBrand?.models || []).map((model) => (
-                <option key={model} value={model}>
-                  {model}
-                </option>
+                <option key={model} value={model}>{model}</option>
               ))}
             </select>
           </div>
 
           <div className="form-group">
-            <label>Potência instalada (W)</label>
+            <label>Potência Instalada (W)</label>
             <input
               type="number"
               value={form.installedPower}
@@ -276,48 +222,46 @@ export default function SystemPage() {
           </div>
 
           <div className="form-group">
-            <label>Localização</label>
+            <label>Cidade / Estado</label>
             <input value={form.location} onChange={(e) => handleField("location", e.target.value)} />
           </div>
 
           <div className="form-group">
-            <label>Distribuidora</label>
+            <label>Distribuidora de Energia</label>
             <input value={form.distributor} onChange={(e) => handleField("distributor", e.target.value)} />
           </div>
 
           <div className="form-group">
-            <label>Método de autenticação</label>
+            <label>Método de Autenticação</label>
             <select value={form.authMethod} onChange={(e) => handleField("authMethod", e.target.value)}>
               {(selectedBrand?.authModes || ["token"]).map((mode) => (
-                <option key={mode} value={mode}>
-                  {mode}
-                </option>
+                <option key={mode} value={mode}>{mode.toUpperCase()}</option>
               ))}
             </select>
           </div>
 
           <div className="form-group full-width">
-            <label>URL da API do fabricante</label>
+            <label>Endpoint / Base URL da API</label>
             <input
-              placeholder="https://api-do-fabricante.com"
+              placeholder="https://server.fabricante.com"
               value={form.apiBaseUrl || ""}
               onChange={(e) => handleField("apiBaseUrl", e.target.value)}
             />
           </div>
 
           <div className="form-group">
-            <label>Serial / Device ID</label>
+            <label>Número de Série / ID</label>
             <input value={form.deviceId || ""} onChange={(e) => handleField("deviceId", e.target.value)} />
           </div>
 
           {(form.authMethod === "credentials" || form.authMethod === "manual_assisted") && (
             <>
               <div className="form-group">
-                <label>Usuário do portal</label>
+                <label>E-mail do Portal</label>
                 <input value={form.username || ""} onChange={(e) => handleField("username", e.target.value)} />
               </div>
               <div className="form-group">
-                <label>Senha</label>
+                <label>Senha do Portal</label>
                 <input
                   type="password"
                   value={form.password || ""}
@@ -329,10 +273,10 @@ export default function SystemPage() {
 
           {(form.authMethod === "token" || form.authMethod === "manual_assisted") && (
             <div className="form-group full-width">
-              <label>Token da API</label>
+              <label>Chave de API / Access Token</label>
               <input
                 type="password"
-                placeholder="Cole aqui o token do fabricante"
+                placeholder="Cole o token de acesso aqui"
                 value={form.apiToken || ""}
                 onChange={(e) => handleField("apiToken", e.target.value)}
               />
@@ -340,14 +284,14 @@ export default function SystemPage() {
           )}
         </div>
 
-        <div className="actions">
+        <footer className="actions">
           <button className="btn-primary" onClick={handleTestConnection} disabled={testing || saving}>
-            {testing ? "Testando..." : "Testar conexão real"}
+            {testing ? "Validando..." : "Testar Conexão"}
           </button>
           <button className="btn-secondary" onClick={handleSave} disabled={testing || saving}>
-            {saving ? "Salvando..." : "Salvar integração"}
+            {saving ? "Processando..." : "Salvar Configurações"}
           </button>
-        </div>
+        </footer>
       </div>
     </div>
   );

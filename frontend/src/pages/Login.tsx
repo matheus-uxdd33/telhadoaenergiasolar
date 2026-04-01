@@ -22,7 +22,7 @@ export default function LoginPage() {
       setAuth(res.user, res.token);
       navigate("/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Falha ao autenticar no Supabase");
+      setError(err.response?.data?.error || "Falha ao autenticar. Verifique suas credenciais.");
     } finally {
       setLoading(false);
     }
@@ -31,28 +31,43 @@ export default function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1>☀️ Painel Solar</h1>
+        <h1>Solar SaaS</h1>
+        <span className="login-subtitle">Acesso exclusivo para clientes e parceiros</span>
+
         <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="E-mail cadastrado no Supabase"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label>E-mail Corporativo</label>
+            <input
+              type="email"
+              placeholder="ex: cliente@empresa.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Senha de Acesso</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
           {error && <div className="error">{error}</div>}
+
           <button type="submit" disabled={loading}>
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? "Autenticando..." : "Entrar no Painel"}
           </button>
         </form>
-        <p className="demo-hint">Crie o usuário em Supabase Auth ou use o endpoint `POST /api/auth/register`.</p>
+
+        <p className="demo-hint">
+          <strong>Modo Demonstração Ativo</strong><br />
+          Qualquer credencial válida no Supabase permite o acesso.
+        </p>
       </div>
     </div>
   );

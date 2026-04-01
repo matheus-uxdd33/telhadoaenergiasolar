@@ -16,39 +16,66 @@ export default function Layout({ children }: LayoutProps) {
     <div className="layout">
       <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <h2>☀️ Solar</h2>
+          <h2>SOLAR SAAS</h2>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="toggle-btn">
-            ↔️
+            {sidebarOpen ? "«" : "»"}
           </button>
         </div>
 
         <nav className="sidebar-nav">
-          <NavLink to="/dashboard">📊 Dashboard</NavLink>
-          <NavLink to="/system">⚙️ Meu Sistema</NavLink>
-          <NavLink to="/alerts">⚠️ Alertas</NavLink>
-          <NavLink to="/reports">📄 Relatórios</NavLink>
-          <NavLink to="/billing">💳 Planos</NavLink>
-          <NavLink to="/support">🎧 Suporte</NavLink>
-          <NavLink to="/profile">👤 Perfil</NavLink>
+          <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
+            <span className="icon">📊</span>
+            {sidebarOpen && <span>Dashboard</span>}
+          </NavLink>
+          <NavLink to="/system" className={({ isActive }) => isActive ? "active" : ""}>
+            <span className="icon">⚙️</span>
+            {sidebarOpen && <span>Meu Sistema</span>}
+          </NavLink>
+          <NavLink to="/alerts" className={({ isActive }) => isActive ? "active" : ""}>
+            <span className="icon">⚠️</span>
+            {sidebarOpen && <span>Alertas</span>}
+          </NavLink>
+          <NavLink to="/reports" className={({ isActive }) => isActive ? "active" : ""}>
+            <span className="icon">📄</span>
+            {sidebarOpen && <span>Relatórios</span>}
+          </NavLink>
+          <NavLink to="/billing" className={({ isActive }) => isActive ? "active" : ""}>
+            <span className="icon">💳</span>
+            {sidebarOpen && <span>Planos</span>}
+          </NavLink>
+          <NavLink to="/support" className={({ isActive }) => isActive ? "active" : ""}>
+            <span className="icon">🎧</span>
+            {sidebarOpen && <span>Suporte</span>}
+          </NavLink>
+          <NavLink to="/profile" className={({ isActive }) => isActive ? "active" : ""}>
+            <span className="icon">👤</span>
+            {sidebarOpen && <span>Perfil</span>}
+          </NavLink>
         </nav>
 
         <div className="sidebar-footer">
           <button onClick={logout} className="logout-btn">
-            🚪 Sair
+            🚪 {sidebarOpen && "Sair da Conta"}
           </button>
         </div>
       </aside>
 
       <main className="main-content">
         <header className="header">
-          <h3>Bem-vindo, {user?.name}!</h3>
+          <div className="header-title">
+            <h3>Bem-vindo, {user?.name || "Usuário"}!</h3>
+          </div>
           <div className="header-info">
-            <span>{user?.email}</span>
-            {user?.planCode && <span className="plan-pill">Plano: {user.planCode}</span>}
+            <span className="user-email">{user?.email}</span>
+            {user?.planCode && <span className="plan-pill">{user.planCode.toUpperCase()}</span>}
           </div>
         </header>
 
-        <div className="content-area">{children}</div>
+        <div className="content-area">
+          <div className="content-wrapper">
+            {children}
+          </div>
+        </div>
       </main>
     </div>
   );

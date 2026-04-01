@@ -30,19 +30,25 @@ export default function DashboardPage() {
     loadDashboard();
   }, []);
 
-  if (loading) return <div className="loading">Carregando...</div>;
-  if (!summary) return <div className="error">Erro ao carregar dados</div>;
+  if (loading) return <div className="loading">Sincronizando dados com o inversor...</div>;
+  if (!summary) return <div className="error">Ops! Ocorreu um problema ao carregar os dados.</div>;
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "online":
-        return "#10b981";
-      case "offline":
-        return "#ef4444";
-      case "warning":
-        return "#f59e0b";
-      default:
-        return "#6b7280";
+      case "online": return "#10b981";
+      case "offline": return "#ef4444";
+      case "warning": return "#f59e0b";
+      default: return "#6b7280";
+    }
+  };
+
+  const getAlertIcon = (severity: string) => {
+    switch (severity) {
+      case "low": return "✅";
+      case "medium": return "⚠️";
+      case "high": return "🚨";
+      case "critical": return "🔥";
+      default: return "ℹ️";
     }
   };
 
@@ -50,79 +56,99 @@ export default function DashboardPage() {
 
   return (
     <div className="dashboard">
-      <h1>Dashboard do Sistema Solar</h1>
+      <header className="dashboard-header">
+        <h1>Dashboard Principal</h1>
+        <p className="dashboard-subtitle">Acompanhe em tempo real a performance do seu sistema solar</p>
+      </header>
 
       {subscription && (
         <div className="plan-banner">
-          <strong>Plano atual:</strong> {subscription.planName} · <b>{subscription.status}</b>
-          {!hasHistory && <span> — este plano mostra geração atual e sinais de emergência.</span>}
+          <span className="icon">🚀</span>
+          <span>
+            <strong>{subscription.planName}</strong> · Status: <b>{subscription.status.toUpperCase()}</b>
+            {!hasHistory && " — Upgrade disponível para acessar histórico completo."}
+          </span>
         </div>
       )}
 
       <div className="cards-grid">
-        <div
-          className="card"
-          style={{ borderLeft: `4px solid ${getStatusColor(summary.systemStatus)}` }}
-        >
+        <div className="card" style={{ borderLeft: `6px solid ${getStatusColor(summary.systemStatus)}` }}>
           <h3>Status do Sistema</h3>
-          <p className="value">{summary.systemStatus.toUpperCase()}</p>
+          <p className="value">
+            {summary.systemStatus.toUpperCase()}
+            <span style={{ fontSize: '12px', color: getStatusColor(summary.systemStatus) }}>●</span>
+          </p>
         </div>
 
         <div className="card">
           <h3>Geração Atual</h3>
-          <p className="value">{summary.currentGeneration.toFixed(2)} kW</p>
+          <p className="value">
+            {summary.currentGeneration.toFixed(2)} <span className="unit">kW</span>
+          </p>
         </div>
 
         <div className="card">
           <h3>Geração Hoje</h3>
-          <p className="value">{summary.todayGeneration.toFixed(2)} kWh</p>
+          <p className="value">
+            {summary.todayGeneration.toFixed(2)} <span className="unit">kWh</span>
+          </p>
         </div>
 
         {hasHistory ? (
           <>
             <div className="card">
               <h3>Geração Este Mês</h3>
-              <p className="value">{summary.monthGeneration.toFixed(2)} kWh</p>
+              <p className="value">
+                {summary.monthGeneration.toFixed(2)} <span className="unit">kWh</span>
+              </p>
             </div>
 
             <div className="card">
               <h3>Economia Estimada</h3>
-              <p className="value">R$ {summary.estimatedSavings.toFixed(2)}</p>
+              <p className="value">
+                <span className="unit">R$</span> {summary.estimatedSavings.toFixed(2)}
+              </p>
             </div>
 
             <div className="card">
               <h3>Disponibilidade</h3>
-              <p className="value">{summary.systemAvailability.toFixed(1)}%</p>
+              <p className="value">
+                {summary.systemAvailability.toFixed(1)} <span className="unit">%</span>
+              </p>
             </div>
           </>
         ) : (
           <div className="card upgrade-card">
-            <h3>Upgrade recomendado</h3>
-            <p className="value">Plano completo</p>
-            <p className="upgrade-text">Desbloqueie histórico, relatórios e suporte em `Planos`.</p>
+            <h3>Recursos Premium</h3>
+            <p className="value" style={{ fontSize: '20px' }}>Histórico & BI</p>
+            <p className="upgrade-text">Dados analíticos e relatórios avançados.</p>
+            <button className="upgrade-btn">Ver Planos</button>
           </div>
         )}
       </div>
 
       <div className="alerts-section">
-        <h2>Alertas Recentes</h2>
+        <h2><span className="icon">🔔</span> Alertas Recentes</h2>
         <div className="alerts-list">
           {alerts.length > 0 ? (
             alerts.map((alert) => (
               <div key={alert.id} className={`alert alert-${alert.severity}`}>
-                <strong>{alert.title}</strong>
-                <p>{alert.description}</p>
-                <small>{new Date(alert.detectedAt).toLocaleString("pt-BR")}</small>
+                <div className="alert-icon">{getAlertIcon(alert.severity)}</div>
+                <div className="alert-content">
+                  <strong>{alert.title}</strong>
+                  <p>{alert.description}</p>
+                  <span className="alert-time">{new Date(alert.detectedAt).toLocaleString("pt-BR")}</span>
+                </div>
               </div>
             ))
           ) : (
-            <p className="no-data">Sem alertas novos</p>
+            <div className="no-data">Nenhum evento registrado no momento.</div>
           )}
         </div>
       </div>
 
       <div className="sync-info">
-        <small>Última sincronização: {new Date(summary.lastSync).toLocaleString("pt-BR")}</small>
+        <p>📡 Dados sincronizados em {new Date(summary.lastSync).toLocaleString("pt-BR")}</p>
       </div>
     </div>
   );
