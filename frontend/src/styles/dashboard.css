@@ -3,6 +3,7 @@
   margin: 0 auto;
   animation: fadeIn 0.8s ease-out;
   color: var(--text-main);
+  --primary-glow: rgba(245, 158, 11, 0.15);
 }
 
 .premium-header {
@@ -139,13 +140,33 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 40%, var(--primary-glow) 100%);
+  opacity: 0;
+  transition: opacity 0.4s;
 }
 
 .premium-card:hover {
   background: var(--bg-card-hover);
-  transform: translateY(-5px);
-  border-color: rgba(255, 158, 11, 0.2);
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.premium-card:hover::after {
+  opacity: 1;
 }
 
 .premium-card.highlight {
@@ -333,6 +354,32 @@
   from {
     opacity: 0;
     transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.energy-flow-section {
+  margin-top: 40px;
+  animation: slideUp 0.8s ease-out;
+}
+
+.section-title {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-weight: 800;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
 
   to {
