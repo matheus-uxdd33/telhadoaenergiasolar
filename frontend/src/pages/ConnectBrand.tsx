@@ -33,9 +33,18 @@ export default function ConnectBrandPage() {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        api.getInverterBrands().then(res => {
-            setAvailableBrands(res.brands || []);
-        });
+        const fetchBrands = async () => {
+            try {
+                console.log("Buscando catálogo de marcas...");
+                const res = await api.getInverterBrands();
+                console.log("Marcas recebidas:", res?.brands?.length);
+                setAvailableBrands(res.brands || []);
+            } catch (err) {
+                console.error("Erro ao carregar marcas:", err);
+                setFeedback({ type: 'error', msg: "Erro ao carregar catálogo. Verifique sua internet." });
+            }
+        };
+        fetchBrands();
     }, []);
 
     const handleConnect = async (e: React.FormEvent) => {
@@ -74,13 +83,18 @@ export default function ConnectBrandPage() {
 
             {!selectedBrand ? (
                 <div className="brand-grid">
-                    {availableBrands.map(brand => (
+                    {availableBrands.length > 0 ? availableBrands.map(brand => (
                         <div key={brand.code} className="brand-card" onClick={() => setSelectedBrand(brand)}>
                             <span className="brand-logo">{BRAND_ICONS[brand.code] || "⚙️"}</span>
                             <span className="brand-name">{brand.name}</span>
                             <button className="connect-select-btn">Selecionar</button>
                         </div>
-                    ))}
+                    )) : (
+                        <div style={{ textAlign: 'center', gridColumn: '1 / -1', padding: '40px' }}>
+                            <p>Carregando catálogo de inversores...</p>
+                            <button onClick={() => window.location.reload()} className="nav-btn" style={{ marginTop: '10px' }}>Tentar Novamente</button>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div className="connection-form-container">
