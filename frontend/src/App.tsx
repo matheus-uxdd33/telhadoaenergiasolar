@@ -7,7 +7,6 @@ import DashboardPage from "./pages/Dashboard";
 import ConnectBrandPage from "./pages/ConnectBrand";
 import SystemPage from "./pages/System";
 import AlertsPage from "./pages/Alerts";
-import AlertsPage from "./pages/Alerts";
 import BillingPage from "./pages/Billing";
 import SupportPage from "./pages/Support";
 import "./styles/layout.css";
