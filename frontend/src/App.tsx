@@ -7,7 +7,9 @@ import DashboardPage from "./pages/Dashboard";
 import ConnectBrandPage from "./pages/ConnectBrand";
 import SystemPage from "./pages/System";
 import AlertsPage from "./pages/Alerts";
+import AlertsPage from "./pages/Alerts";
 import BillingPage from "./pages/Billing";
+import SupportPage from "./pages/Support";
 import "./styles/layout.css";
 
 export default function App() {
@@ -30,7 +32,7 @@ export default function App() {
                   <Route path="/alerts" element={<AlertsPage />} />
                   <Route path="/reports" element={<div>📄 Relatórios (em breve)</div>} />
                   <Route path="/billing" element={<BillingPage />} />
-                  <Route path="/support" element={<div>🎧 Suporte (em breve)</div>} />
+                  <Route path="/support" element={<SupportPage />} />
                   <Route path="/profile" element={<div>👤 Perfil (em breve)</div>} />
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
