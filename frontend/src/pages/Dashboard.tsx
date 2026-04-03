@@ -34,9 +34,14 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) return <div className="loading-screen">Sincronizando dados com o inversor...</div>;
-  if (!summary) return <div className="error-screen">Ops! Ocorreu um problema ao carregar os dados.</div>;
 
-  const currentSavings = summary.todayGeneration * kwhRate;
+  const finalSummary = summary || {
+    todayGeneration: 0,
+    monthGeneration: 0,
+    lastSync: new Date().toISOString()
+  };
+
+  const currentSavings = finalSummary.todayGeneration * kwhRate;
 
   return (
     <div className="dashboard-premium">
@@ -89,7 +94,7 @@ export default function DashboardPage() {
             <div className="premium-card">
               <span className="card-label">GERAÇÃO DO DIA</span>
               <div className="card-value">
-                {summary.todayGeneration.toFixed(1)} <span className="unit">kWh</span>
+                {finalSummary.todayGeneration.toFixed(1)} <span className="unit">kWh</span>
               </div>
             </div>
           </div>
@@ -180,7 +185,7 @@ export default function DashboardPage() {
       )}
 
       <div className="sync-info">
-        <p>📡 {location} | Sincronizado em {new Date(summary.lastSync).toLocaleString("pt-BR")}</p>
+        <p>📡 {location} | Sincronizado em {new Date(finalSummary.lastSync).toLocaleString("pt-BR")}</p>
       </div>
     </div>
   );
