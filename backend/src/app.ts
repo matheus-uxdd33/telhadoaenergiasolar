@@ -21,6 +21,11 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.post("/api/billing/webhook/pagbank", billingWebhookHandler);
+app.get("/api/billing/plans", (_req, res) => {
+  const { PLAN_CATALOG } = require("./modules/billing/plans");
+  res.json({ plans: PLAN_CATALOG });
+});
+
 app.use("/api", authenticate);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/system", systemRoutes);
