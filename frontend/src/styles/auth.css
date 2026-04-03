@@ -5,7 +5,7 @@
   align-items: center;
   min-height: 100vh;
   padding: 40px 10%;
-  background: url('/api/images/solar_login_bg.png') no-repeat center center;
+  background: url('/background-solar.png') no-repeat center center;
   background-size: cover;
   position: relative;
   font-family: 'Outfit', sans-serif;

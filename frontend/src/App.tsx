@@ -4,6 +4,7 @@ import { useAuthStore } from "./store/auth";
 import Layout from "./components/layout/Layout";
 import LoginPage from "./pages/Login";
 import DashboardPage from "./pages/Dashboard";
+import ConnectBrandPage from "./pages/ConnectBrand";
 import SystemPage from "./pages/System";
 import AlertsPage from "./pages/Alerts";
 import BillingPage from "./pages/Billing";
@@ -24,6 +25,7 @@ export default function App() {
               <Layout>
                 <Routes>
                   <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/connect-brand" element={<ConnectBrandPage />} />
                   <Route path="/system" element={<SystemPage />} />
                   <Route path="/alerts" element={<AlertsPage />} />
                   <Route path="/reports" element={<div>📄 Relatórios (em breve)</div>} />

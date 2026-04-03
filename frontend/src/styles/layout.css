@@ -1,21 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: hsl(142, 72%, 29%);
-  --primary-light: hsl(142, 69%, 58%);
-  --secondary: hsl(217, 33%, 17%);
-  --accent: hsl(210, 100%, 50%);
-  --bg-main: hsl(210, 40%, 98%);
-  --bg-sidebar: hsl(217, 33%, 12%);
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.3);
-  --text-main: hsl(217, 19%, 27%);
-  --text-light: hsl(215, 16%, 47%);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --radius-lg: 16px;
-  --radius-md: 12px;
+  --primary: hsl(38, 92%, 50%);
+  /* Solar Orange */
+  --primary-light: hsl(38, 92%, 60%);
+  --secondary: hsl(210, 20%, 98%);
+  --accent: hsl(142, 69%, 58%);
+  /* Leaf Green */
+  --bg-main: hsl(220, 30%, 5%);
+  --bg-sidebar: hsl(220, 30%, 8%);
+  --bg-card: hsl(220, 30%, 12%);
+  --bg-card-hover: hsl(220, 30%, 15%);
+  --glass-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text-main: hsl(210, 20%, 90%);
+  --text-light: hsl(215, 15%, 65%);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+  --radius-lg: 24px;
+  --radius-md: 16px;
 }
 
 * {
@@ -126,9 +129,9 @@ body {
 }
 
 .sidebar-nav a.active {
-  background: linear-gradient(135deg, var(--primary) 0%, #065f46 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, #b45309 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.15);
 }
 
 .sidebar-footer {

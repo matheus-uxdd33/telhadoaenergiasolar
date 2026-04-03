@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthStore } from "../../store/auth";
+import WhatsAppButton from "../common/WhatsAppButton";
 import "../../styles/layout.css";
 
 interface LayoutProps {
@@ -77,6 +78,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
       </main>
+      <WhatsAppButton />
     </div>
   );
 }
