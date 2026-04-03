@@ -52,7 +52,9 @@ export default function SystemPage() {
       });
     } catch (err) {
       console.error("Erro ao carregar sistema:", err);
-      setFeedback({ type: "error", message: "Erro ao carregar dados do inversor." });
+      // Força um sistema vazio para não travar a tela
+      setSystem(initialForm as any);
+      setFeedback({ type: "error", message: "Erro ao carregar dados do inversor. Verifique sua conexão." });
     } finally {
       setLoading(false);
     }
@@ -121,7 +123,16 @@ export default function SystemPage() {
   };
 
   if (loading) return <div className="loading">Carregando configurações do sistema...</div>;
-  if (!system) return <div className="error">Ops! Falha ao carregar as informações do sistema.</div>;
+
+  if (!system) {
+    return (
+      <div className="error-screen">
+        <h2>Ops! Problema de Sincronização</h2>
+        <p>Não conseguimos carregar os dados da sua usina. O servidor pode estar ocupado ou fora do ar.</p>
+        <button onClick={() => window.location.reload()} className="nav-btn primary">Tentar Novamente</button>
+      </div>
+    );
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {

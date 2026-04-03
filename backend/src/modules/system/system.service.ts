@@ -512,19 +512,29 @@ export const getSystemInfo = async (user?: AuthRequest["user"]) => {
         .limit(1)
         .maybeSingle();
 
+      if (siteRes.error) {
+        console.error("Erro Supabase (site):", siteRes.error);
+      }
+
       if (siteRes.data?.id) {
         const connRes = await supabaseAdmin
           .from("provider_connections")
-          .select("provider_device_id, auth_method, is_active, last_sync, sync_error, inverter_brands(name), inverter_models(name)")
+          .select("provider_device_id, auth_method, is_active, last_sync, sync_error, brand_id, model_id, inverter_brands(name), inverter_models(name)")
           .eq("tenant_id", user.tenantId)
           .eq("site_id", siteRes.data.id)
           .order("created_at", { ascending: false })
           .limit(1)
           .maybeSingle();
 
+        if (connRes.error) {
+          console.error("Erro Supabase (conn):", connRes.error);
+        }
+
         if (connRes.data) {
-          const brandName = (connRes.data as any).inverter_brands?.name || "Inversor conectado";
-          const modelName = (connRes.data as any).inverter_models?.name || "Modelo cadastrado";
+          const brandData = (connRes.data as any).inverter_brands;
+          const modelData = (connRes.data as any).inverter_models;
+          const brandName = brandData?.name || "Inversor conectado";
+          const modelName = modelData?.name || "Modelo cadastrado";
           const brand = providerCatalog.find((item) => item.name === brandName) || providerCatalog[0];
 
           const system: SystemInfoResponse = {
@@ -550,8 +560,8 @@ export const getSystemInfo = async (user?: AuthRequest["user"]) => {
           return system;
         }
       }
-    } catch (_error) {
-      // fallback local
+    } catch (dbError) {
+      console.error("Falha fatal na consulta ao Supabase:", dbError);
     }
   }
 
