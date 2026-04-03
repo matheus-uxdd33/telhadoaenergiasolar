@@ -1,4 +1,6 @@
 -- Schema inicial para Solar SaaS
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Tabela de tenants (empresas revendedoras ou clientes enterprise)
 CREATE TABLE tenants (
@@ -95,9 +97,10 @@ CREATE TABLE telemetry_events (
   status VARCHAR(50),
   raw_data JSONB,
   recorded_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX(site_id, recorded_at)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_telemetry_site_recorded ON telemetry_events(site_id, recorded_at);
 
 -- Tabela de alertas
 CREATE TABLE alerts (
@@ -111,9 +114,10 @@ CREATE TABLE alerts (
   is_resolved BOOLEAN DEFAULT FALSE,
   resolved_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX(site_id, severity)
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_alerts_site_severity ON alerts(site_id, severity);
 
 -- Tabela de relatórios
 CREATE TABLE reports (
@@ -193,9 +197,10 @@ CREATE TABLE audit_logs (
   resource_type VARCHAR(100),
   resource_id VARCHAR(255),
   changes JSONB,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX(tenant_id, created_at)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_audit_logs_tenant_created ON audit_logs(tenant_id, created_at);
 
 -- Índices para performance
 CREATE INDEX idx_users_tenant ON users(tenant_id);

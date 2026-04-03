@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
+    "dev:brave": "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\" \"timeout /t 5 && start brave http://localhost:5173\"",
+    "open:accounts": "start brave https://app.netlify.com https://app.supabase.com",
     "build": "npm run build --workspace backend && npm run build --workspace frontend",
     "start": "npm run start --workspace backend"
   },
