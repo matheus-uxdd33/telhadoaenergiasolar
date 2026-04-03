@@ -11,6 +11,7 @@ import BillingPage from "./pages/Billing";
 import SupportPage from "./pages/Support";
 import RegisterPage from "./pages/Register";
 import ProfilePage from "./pages/Profile";
+import ProvisioningPage from "./pages/Provisioning";
 import "./styles/layout.css";
 
 export default function App() {
