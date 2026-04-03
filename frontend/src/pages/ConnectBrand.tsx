@@ -47,6 +47,12 @@ export default function ConnectBrandPage() {
         fetchBrands();
     }, []);
 
+    React.useEffect(() => {
+        if (selectedBrand) {
+            setFormData(prev => ({ ...prev, model: "" }));
+        }
+    }, [selectedBrand]);
+
     const handleConnect = async (e: React.FormEvent) => {
         e.preventDefault();
         setConnecting(true);
