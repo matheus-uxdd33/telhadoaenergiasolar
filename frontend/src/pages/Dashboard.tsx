@@ -110,7 +110,7 @@ export default function DashboardPage() {
             <div className="premium-card">
               <span className="card-label">GERAÇÃO HOJE</span>
               <div className="card-value">
-                {summary.todayGeneration.toFixed(1)} <span className="unit">kWh</span>
+                {finalSummary.todayGeneration.toFixed(1)} <span className="unit">kWh</span>
               </div>
               <span className="card-delta positive">↑ Monitoramento térmico OK</span>
             </div>
@@ -135,7 +135,7 @@ export default function DashboardPage() {
             <div className="premium-card">
               <span className="card-label">ECONOMIA ESTIMADA (MÊS)</span>
               <div className="card-value">
-                <span className="currency">R$</span> {(summary.monthGeneration * kwhRate).toFixed(0)}
+                <span className="currency">R$</span> {(finalSummary.monthGeneration * kwhRate).toFixed(0)}
               </div>
               <span className="card-delta positive">↑ Baseada na tarifa de {location}</span>
             </div>
@@ -143,7 +143,7 @@ export default function DashboardPage() {
             <div className="premium-card">
               <span className="card-label">CO₂ EVITADO</span>
               <div className="card-value">
-                {Math.round(summary.todayGeneration * 0.5)} <span className="unit">kg</span>
+                {Math.round(finalSummary.todayGeneration * 0.5)} <span className="unit">kg</span>
               </div>
               <span className="card-delta positive">Equivale a 18 árvores</span>
             </div>
