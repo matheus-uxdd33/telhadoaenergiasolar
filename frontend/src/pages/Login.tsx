@@ -65,8 +65,7 @@ export default function LoginPage() {
         </form>
 
         <p className="demo-hint">
-          <strong>Modo Demonstração Ativo</strong><br />
-          Qualquer credencial válida no Supabase permite o acesso.
+          <strong>Tenha monitorado sua rede energética</strong>
         </p>
       </div>
     </div>
