@@ -35,7 +35,7 @@ export default function App() {
                   <Route path="/reports" element={<div>📄 Relatórios (em breve)</div>} />
                   <Route path="/billing" element={<BillingPage />} />
                   <Route path="/support" element={<SupportPage />} />
-                  <Route path="/profile" element={<div>👤 Perfil (em breve)</div>} />
+                  <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
               </Layout>

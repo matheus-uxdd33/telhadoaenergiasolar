@@ -44,11 +44,12 @@ export default function ConnectBrandPage() {
         setFeedback(null);
 
         try {
+            const { model, ...rest } = formData;
             const result = await api.updateSystemCredentials({
                 brandCode: selectedBrand.code,
-                model: formData.model || selectedBrand.models?.[0] || "Modelo Padrão",
+                model: model || selectedBrand.models?.[0] || "Modelo Padrão",
                 authMethod: selectedBrand.authModes?.[0] || "credentials",
-                ...formData
+                ...rest
             });
 
             if (result) {
