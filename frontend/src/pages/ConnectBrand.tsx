@@ -116,7 +116,7 @@ export default function ConnectBrandPage() {
                                     value={formData.model}
                                     onChange={e => setFormData({ ...formData, model: e.target.value })}
                                 >
-                                    <option value="">Selecione o modelo...</option>
+                                    <option value="" disabled>Selecione o modelo...</option>
                                     {selectedBrand.models?.map((m: string) => (
                                         <option key={m} value={m}>{m}</option>
                                     ))}
