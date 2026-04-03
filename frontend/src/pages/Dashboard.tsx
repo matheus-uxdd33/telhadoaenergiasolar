@@ -4,6 +4,7 @@ import {
 } from "recharts";
 import api from "../services/api";
 import { DashboardSummary } from "../types";
+import EnergyFlow from "../components/dashboard/EnergyFlow";
 import "../styles/dashboard.css";
 
 const hourlyData = [
@@ -18,6 +19,13 @@ export default function DashboardPage() {
   const [kwhRate, setKwhRate] = React.useState(0.85);
   const [simpleMode, setSimpleMode] = React.useState(false);
   const [location] = React.useState("Belo Horizonte, MG");
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bom dia";
+    if (hour < 18) return "Boa tarde";
+    return "Boa noite";
+  };
 
   React.useEffect(() => {
     const loadDashboard = async () => {
@@ -47,7 +55,10 @@ export default function DashboardPage() {
     <div className="dashboard-premium">
       <header className="premium-header">
         <div className="header-title">
-          <h1>{simpleMode ? "Sua Usina Solar" : "Monitoramento em tempo real"}</h1>
+          <h1>{getGreeting()}, {simpleMode ? "sua usina está a todo vapor! 🚀" : "awqy! 👋"}</h1>
+          <p style={{ color: 'var(--text-light)', marginTop: '4px' }}>
+            {simpleMode ? "Confira quanto você já economizou hoje." : "Monitoramento em tempo real do seu sistema solar."}
+          </p>
           <div className="status-indicator">
             <span className="dot online"></span>
             <span>{simpleMode ? "Sistema funcionando perfeitamente! ✅" : "Sistema ativo · Eficiência Térmica: 94%"}</span>
@@ -178,6 +189,11 @@ export default function DashboardPage() {
                     <p>Monitoramento térmico estável.</p>
                   </div>
                 </div>
+              </div>
+
+              <div className="energy-flow-section">
+                <h3 className="section-title">Fluxo de Energia</h3>
+                <EnergyFlow generation={finalSummary.todayGeneration} />
               </div>
             </div>
           </div>
