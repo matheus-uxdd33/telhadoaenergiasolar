@@ -6,6 +6,13 @@ import {
   loginGrowatt,
   TelemetrySnapshot,
 } from "./growatt.service";
+import { GrowattAdapter } from "./adapters/GrowattAdapter";
+import { DeyeAdapter } from "./adapters/DeyeAdapter";
+
+const ADAPTERS: Record<string, any> = {
+  growatt: new GrowattAdapter(),
+  solarman: new DeyeAdapter(),
+};
 
 export type AuthMode = "credentials" | "token" | "serial" | "manual_assisted";
 export type ConnectionStatus = "connected" | "pending" | "disconnected";
@@ -605,60 +612,34 @@ export const getLiveTelemetryForUser = async (user?: AuthRequest["user"]): Promi
   }
 
   const system = await getSystemInfo(user);
-  const storedInput = connectionSecretsStore.get(user.tenantId);
-  const cached = telemetryStore.get(user.tenantId);
+  const adapter = ADAPTERS[system.brandCode?.toLowerCase()];
 
-  if (cached && Date.now() - new Date(cached.lastSync).getTime() < 60_000) {
-    return cached;
-  }
-
-  if (system.brandCode === "growatt" && storedInput) {
-    const baseUrl = storedInput.apiBaseUrl || system.apiBaseUrl || "https://server.growatt.com";
-
-    if (storedInput.authMethod === "credentials") {
-      const login = await loginGrowatt({
-        baseUrl,
-        username: storedInput.username,
-        password: storedInput.password,
-        apiToken: storedInput.apiToken,
-        deviceId: storedInput.deviceId,
+  if (adapter) {
+    try {
+      const live = await adapter.fetchRealTime({
+        username: connectionSecretsStore.get(user.tenantId)?.username,
+        password: connectionSecretsStore.get(user.tenantId)?.password,
+        apiToken: connectionSecretsStore.get(user.tenantId)?.apiToken
       });
 
-      if (!login.success) {
-        const fallback = buildGrowattFallbackTelemetry(login.message);
-        telemetryStore.set(user.tenantId, fallback);
-        return fallback;
-      }
+      const snapshot: TelemetrySnapshot = {
+        currentGeneration: live.generationKw,
+        todayGeneration: (live.totalEnergyKwh / 100), // mock calc
+        status: live.status,
+        lastSync: new Date().toISOString(),
+        source: adapter.brandCode,
+        alerts: [], // Adapters could provide alerts too
+        ...live
+      } as any;
 
-      const telemetry = await fetchGrowattTelemetry(
-        {
-          baseUrl,
-          username: storedInput.username,
-          password: storedInput.password,
-          apiToken: storedInput.apiToken,
-          deviceId: storedInput.deviceId,
-        },
-        login.cookieHeader
-      );
-
-      const snapshot = telemetry || buildGrowattFallbackTelemetry("Growatt autenticado, mas a telemetria ainda não foi liberada pelo endpoint.");
       telemetryStore.set(user.tenantId, snapshot);
-      await persistTelemetryToSupabase(user as NonNullable<AuthRequest["user"]>, snapshot);
       return snapshot;
+    } catch (e) {
+      console.warn(`Adapter ${system.brandCode} error:`, e);
     }
-
-    const telemetry = await fetchGrowattTelemetry({
-      baseUrl,
-      apiToken: storedInput.apiToken,
-      deviceId: storedInput.deviceId,
-    });
-
-    const snapshot = telemetry || buildGrowattFallbackTelemetry("Growatt salvo. Informe token/serial válidos para liberar a geração em tempo real.");
-    telemetryStore.set(user.tenantId, snapshot);
-    await persistTelemetryToSupabase(user as NonNullable<AuthRequest["user"]>, snapshot);
-    return snapshot;
   }
 
+  // Fallback para mock existente
   const generic: TelemetrySnapshot = {
     currentGeneration: system.connectionStatus === "connected" ? 4.2 : 0,
     todayGeneration: system.connectionStatus === "connected" ? 18.5 : 0,
@@ -678,7 +659,7 @@ export const getLiveTelemetryForUser = async (user?: AuthRequest["user"]): Promi
         status: "open",
       },
     ],
-    source: "growatt-fallback",
+    source: "adapter-fallback",
   };
 
   telemetryStore.set(user.tenantId, generic);
