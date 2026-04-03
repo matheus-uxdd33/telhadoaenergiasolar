@@ -2,28 +2,64 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/dashboard.css";
 
-const BRANDS = [
-    { id: "growatt", name: "Growatt", logo: "⚡" },
-    { id: "deye", name: "Deye", logo: "🔋" },
-    { id: "fronius", name: "Fronius", logo: "☀️" },
-    { id: "sma", name: "SMA", logo: "🏢" }
-];
+import api from "../services/api";
+
+const BRAND_ICONS: Record<string, string> = {
+    growatt: "⚡",
+    solarman: "🔋",
+    sungrow: "☀️",
+    solis: "☁️",
+    victron: "🔌",
+    goodwe: "🏢",
+    huawei: "🦾",
+    fronius: "🔥",
+    generic: "⚙️"
+};
 
 export default function ConnectBrandPage() {
-    const [selectedBrand, setSelectedBrand] = React.useState<string | null>(null);
-    const [formData, setFormData] = React.useState({ serial: "", apiKey: "", region: "Brasil" });
+    const [availableBrands, setAvailableBrands] = React.useState<any[]>([]);
+    const [selectedBrand, setSelectedBrand] = React.useState<any | null>(null);
+    const [formData, setFormData] = React.useState({
+        model: "",
+        username: "",
+        password: "",
+        apiToken: "",
+        installedPower: 5000,
+        location: "Brasil",
+        distributor: "Outra"
+    });
     const [connecting, setConnecting] = React.useState(false);
+    const [feedback, setFeedback] = React.useState<{ type: 'success' | 'error', msg: string } | null>(null);
     const navigate = useNavigate();
 
-    const handleConnect = (e: React.FormEvent) => {
+    React.useEffect(() => {
+        api.getInverterBrands().then(res => {
+            setAvailableBrands(res.brands || []);
+        });
+    }, []);
+
+    const handleConnect = async (e: React.FormEvent) => {
         e.preventDefault();
         setConnecting(true);
-        // Simulation
-        setTimeout(() => {
+        setFeedback(null);
+
+        try {
+            const result = await api.updateSystemCredentials({
+                brandCode: selectedBrand.code,
+                model: formData.model || selectedBrand.models?.[0] || "Modelo Padrão",
+                authMethod: selectedBrand.authModes?.[0] || "credentials",
+                ...formData
+            });
+
+            if (result) {
+                setFeedback({ type: 'success', msg: "Sistema conectado com sucesso!" });
+                setTimeout(() => navigate("/dashboard"), 1500);
+            }
+        } catch (err) {
+            setFeedback({ type: 'error', msg: "Erro ao conectar. Verifique as credenciais." });
+        } finally {
             setConnecting(false);
-            alert("Sistema conectado com sucesso! Sincronizando dados em tempo real.");
-            navigate("/dashboard");
-        }, 2000);
+        }
     };
 
     return (
@@ -37,9 +73,9 @@ export default function ConnectBrandPage() {
 
             {!selectedBrand ? (
                 <div className="brand-grid">
-                    {BRANDS.map(brand => (
-                        <div key={brand.id} className="brand-card" onClick={() => setSelectedBrand(brand.id)}>
-                            <span className="brand-logo">{brand.logo}</span>
+                    {availableBrands.map(brand => (
+                        <div key={brand.code} className="brand-card" onClick={() => setSelectedBrand(brand)}>
+                            <span className="brand-logo">{BRAND_ICONS[brand.code] || "⚙️"}</span>
                             <span className="brand-name">{brand.name}</span>
                             <button className="connect-select-btn">Selecionar</button>
                         </div>
@@ -47,45 +83,66 @@ export default function ConnectBrandPage() {
                 </div>
             ) : (
                 <div className="connection-form-container">
-                    <button className="back-btn" onClick={() => setSelectedBrand(null)}>← Voltar para marcas</button>
-                    <div className="premium-card highlight" style={{ maxWidth: '500px', margin: '0 auto' }}>
-                        <h2>Configurar {BRANDS.find(b => b.id === selectedBrand)?.name}</h2>
+                    <button className="back-btn" onClick={() => { setSelectedBrand(null); setFeedback(null); }}>← Voltar para marcas</button>
+                    <div className="premium-card highlight" style={{ maxWidth: '500px', margin: '20px auto' }}>
+                        <h2>Configurar {selectedBrand.name}</h2>
+
+                        {feedback && (
+                            <div className={`status-box ${feedback.type}`} style={{ marginBottom: '15px' }}>
+                                {feedback.msg}
+                            </div>
+                        )}
+
                         <form onSubmit={handleConnect} className="connect-form">
                             <div className="form-group">
-                                <label>Número de Série do Inversor (S/N)</label>
-                                <input
-                                    type="text"
-                                    placeholder="Ex: GRW-12345678"
-                                    required
-                                    value={formData.serial}
-                                    onChange={e => setFormData({ ...formData, serial: e.target.value })}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Chave de API / Token</label>
-                                <input
-                                    type="password"
-                                    placeholder="Cole sua chave aqui"
-                                    required
-                                    value={formData.apiKey}
-                                    onChange={e => setFormData({ ...formData, apiKey: e.target.value })}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Região de Instalação</label>
+                                <label>Modelo do Inversor</label>
                                 <select
-                                    value={formData.region}
-                                    onChange={e => setFormData({ ...formData, region: e.target.value })}
+                                    required
+                                    value={formData.model}
+                                    onChange={e => setFormData({ ...formData, model: e.target.value })}
                                 >
-                                    <option>Bahia</option>
-                                    <option>Minas Gerais</option>
-                                    <option>São Paulo</option>
-                                    <option>Rio de Janeiro</option>
-                                    <option>Goiás</option>
+                                    <option value="">Selecione o modelo...</option>
+                                    {selectedBrand.models?.map((m: string) => (
+                                        <option key={m} value={m}>{m}</option>
+                                    ))}
+                                    <option value="Outro">Outro modelo (Manual)</option>
                                 </select>
                             </div>
+
+                            <div className="form-group">
+                                <label>Login / Usuário do Portal</label>
+                                <input
+                                    type="text"
+                                    placeholder="Seu usuário"
+                                    required
+                                    value={formData.username}
+                                    onChange={e => setFormData({ ...formData, username: e.target.value })}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Senha do Portal</label>
+                                <input
+                                    type="password"
+                                    placeholder="Sua senha"
+                                    required
+                                    value={formData.password}
+                                    onChange={e => setFormData({ ...formData, password: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Potência Instalada (em Watts)</label>
+                                <input
+                                    type="number"
+                                    placeholder="Ex: 5000"
+                                    required
+                                    value={formData.installedPower}
+                                    onChange={e => setFormData({ ...formData, installedPower: parseInt(e.target.value) })}
+                                />
+                            </div>
+
                             <button type="submit" className="nav-btn primary" style={{ width: '100%', marginTop: '20px' }}>
-                                {connecting ? "Sincronizando..." : "Confirmar Conexão"}
+                                {connecting ? "Validando Conexão..." : "Sincronizar Usina"}
                             </button>
                         </form>
                     </div>

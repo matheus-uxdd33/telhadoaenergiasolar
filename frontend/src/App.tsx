@@ -9,6 +9,7 @@ import SystemPage from "./pages/System";
 import AlertsPage from "./pages/Alerts";
 import BillingPage from "./pages/Billing";
 import SupportPage from "./pages/Support";
+import RegisterPage from "./pages/Register";
 import "./styles/layout.css";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {isAuthenticated ? (
           <Route
