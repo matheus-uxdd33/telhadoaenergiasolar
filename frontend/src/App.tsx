@@ -10,6 +10,7 @@ import AlertsPage from "./pages/Alerts";
 import BillingPage from "./pages/Billing";
 import SupportPage from "./pages/Support";
 import RegisterPage from "./pages/Register";
+import ProfilePage from "./pages/Profile";
 import "./styles/layout.css";
 
 export default function App() {

@@ -67,6 +67,12 @@ export default function LoginPage() {
         <p className="demo-hint">
           <strong>Tenha monitorado sua rede energética</strong>
         </p>
+
+        <div className="login-footer" style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '15px' }}>
+          <p style={{ fontSize: '14px', color: 'var(--text-light)' }}>
+            Novo por aqui? <a href="/register" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none' }}>Crie sua conta grátis</a>
+          </p>
+        </div>
       </div>
     </div>
   );
