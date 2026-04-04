@@ -1,25 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: hsl(38, 92%, 50%);
-  /* Solar Orange */
-  --primary-light: hsl(38, 92%, 60%);
+  --primary: #10b981;
+  /* Emerald Green */
+  --primary-light: #34d399;
+  /* Neon Green */
   --secondary: hsl(210, 20%, 98%);
-  --accent: hsl(142, 69%, 58%);
   /* Leaf Green */
-  --bg-main: hsl(220, 30%, 5%);
-  --bg-sidebar: hsl(220, 30%, 8%);
-  --bg-card: hsl(220, 30%, 12%);
-  --bg-card-hover: hsl(220, 30%, 15%);
-  --glass-bg: rgba(15, 23, 42, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent: #059669;
+  --bg-main: #050505;
+  --bg-sidebar: #0a0a0a;
+  --bg-card: rgba(15, 23, 42, 0.6);
+  --bg-card-hover: rgba(15, 23, 42, 0.8);
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(16, 185, 129, 0.2);
   --text-main: hsl(210, 20%, 90%);
   --text-light: hsl(215, 15%, 65%);
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
   --radius-lg: 24px;
   --radius-md: 16px;
+  --neon-glow: 0 0 20px rgba(16, 185, 129, 0.3);
 }
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
 
 * {
   margin: 0;

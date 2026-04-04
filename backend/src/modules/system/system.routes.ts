@@ -65,4 +65,46 @@ router.put("/credentials", async (req: AuthRequest, res: Response) => {
   });
 });
 
+/**
+ * Simplified Save Endpoint for the Installation Wizard
+ * Fields: marca, endpoint, ssid, serial, email, senha
+ */
+router.post("/save", async (req: AuthRequest, res: Response) => {
+  const { marca, endpoint, ssid, serial, email, senha } = req.body;
+
+  if (!req.user) {
+    return res.status(401).json({ error: "Usuário não autenticado." });
+  }
+
+  // Mapping simplified fields to the standard internal input
+  const input = {
+    brandCode: marca,
+    model: "Universal Wizard Inverter", // Default model for wizard flow
+    installedPower: 5000, // Default 5kW
+    location: "Brasil", // Default location
+    distributor: "Ainda não definido", // Default distributor
+    authMethod: "credentials" as any,
+    username: email,
+    password: senha,
+    apiBaseUrl: endpoint,
+    deviceId: serial,
+  };
+
+  try {
+    const result = await saveSystemConfiguration(req.user, input);
+
+    return res.json({
+      success: true,
+      message: "Sistema Conectado! Começando a gerar economia.",
+      system: result.system,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Erro ao salvar configuração do inversor."
+    });
+  }
+});
+
+
 export default router;

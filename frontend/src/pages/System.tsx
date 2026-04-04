@@ -1,6 +1,9 @@
 import React from "react";
 import api from "../services/api";
 import { InverterBrandOption, SystemConnectionForm, SystemInfo } from "../types";
+import { InstallationWizard } from "../components/onboarding/InstallationWizard";
+import { EnergyFlow } from "../components/dashboard/EnergyFlow";
+import { ReportWidget } from "../components/dashboard/ReportWidget";
 import "../styles/system.css";
 
 const initialForm: SystemConnectionForm = {
@@ -143,167 +146,69 @@ export default function SystemPage() {
   };
 
   return (
-    <div className="system-page">
-      <h1>Configurações do Sistema</h1>
-
-      {system.note && <div className="system-banner"><span className="icon">ℹ️</span> {system.note}</div>}
-      {feedback && <div className={`feedback-banner ${feedback.type}`}>{feedback.message}</div>}
-
-      <div className="system-info-grid">
-        <div className="info-group">
-          <label>Marca do Inversor</label>
-          <p>{system.inverterBrand}</p>
+    <div className="system-page max-w-7xl mx-auto px-6 py-10 space-y-12">
+      {system.setupRequired ? (
+        <div className="animate-in fade-in zoom-in duration-700">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl font-black text-white mb-4 tracking-tighter">Bem-vindo ao Futuro</h1>
+            <p className="text-gray-500 text-lg">Vamos conectar sua usina e começar a monitorar sua economia real.</p>
+          </div>
+          <InstallationWizard />
         </div>
-
-        <div className="info-group">
-          <label>Modelo do Equipamento</label>
-          <p>{system.inverterModel}</p>
-        </div>
-
-        <div className="info-group">
-          <label>Potência Instalada</label>
-          <p>{system.installedPower} W</p>
-        </div>
-
-        <div className="info-group">
-          <label>Localização</label>
-          <p>{system.location}</p>
-        </div>
-
-        <div className="info-group">
-          <label>Distribuidora</label>
-          <p>{system.distributor}</p>
-        </div>
-
-        <div className="info-group">
-          <label>Status da Conexão</label>
-          <p style={{ color: getStatusColor(system.connectionStatus) }}>
-            {system.connectionStatus === "connected"
-              ? "● Conectado"
-              : system.connectionStatus === "pending"
-                ? "● Validando"
-                : "● Desconectado"}
-          </p>
-        </div>
-      </div>
-
-      <div className="brand-selection-area">
-        <h2 className="brand-selection-title">1. Selecione o Fabricante</h2>
-        <div className="brands-grid">
-          {brands.map((brand) => (
-            <div
-              key={brand.code}
-              className={`brand-card ${form.brandCode === brand.code ? 'active' : ''}`}
-              onClick={() => handleBrandChange(brand.code)}
-            >
-              <div className="brand-card-top">
-                <h4>{brand.name}</h4>
-                <span className="confirm-icon">✅</span>
-              </div>
-              <span>{brand.models?.length || 0} modelos suportados</span>
-              {brand.note && <span className="brand-note">{brand.note.split(":")[0]}</span>}
+      ) : (
+        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+              <h1 className="text-4xl font-black text-white tracking-tight">Gestão de Ativos Solar</h1>
+              <p className="text-gray-500 font-bold uppercase tracking-[0.2em] text-xs">Unidade: {system.location}</p>
             </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="connection-panel">
-        <header className="panel-header">
-          <h2>2. Configurar Integração {selectedBrand?.name}</h2>
-          <p>Informe as credenciais de acesso ou tokens para sincronizar os dados.</p>
-        </header>
-
-        <div className="connection-form">
-          <div className="form-group">
-            <label>Modelo do Inversor</label>
-            <select value={form.model} onChange={(e) => handleField("model", e.target.value)}>
-              {(selectedBrand?.models || []).map((model) => (
-                <option key={model} value={model}>{model}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Potência Instalada (W)</label>
-            <input
-              type="number"
-              value={form.installedPower}
-              onChange={(e) => handleField("installedPower", Number(e.target.value))}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Cidade / Estado</label>
-            <input value={form.location} onChange={(e) => handleField("location", e.target.value)} />
-          </div>
-
-          <div className="form-group">
-            <label>Distribuidora de Energia</label>
-            <input value={form.distributor} onChange={(e) => handleField("distributor", e.target.value)} />
-          </div>
-
-          <div className="form-group">
-            <label>Método de Autenticação</label>
-            <select value={form.authMethod} onChange={(e) => handleField("authMethod", e.target.value)}>
-              {(selectedBrand?.authModes || ["token"]).map((mode) => (
-                <option key={mode} value={mode}>{mode.toUpperCase()}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group full-width">
-            <label>Endpoint / Base URL da API</label>
-            <input
-              placeholder="https://server.fabricante.com"
-              value={form.apiBaseUrl || ""}
-              onChange={(e) => handleField("apiBaseUrl", e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Número de Série / ID</label>
-            <input value={form.deviceId || ""} onChange={(e) => handleField("deviceId", e.target.value)} />
-          </div>
-
-          {(form.authMethod === "credentials" || form.authMethod === "manual_assisted") && (
-            <>
-              <div className="form-group">
-                <label>E-mail do Portal</label>
-                <input value={form.username || ""} onChange={(e) => handleField("username", e.target.value)} />
+            <div className="flex items-center gap-4">
+              <div className="px-5 py-2 glass rounded-2xl border-emerald-500/30 flex items-center gap-3">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
+                <span className="text-sm font-black text-emerald-400 capitalize">{system.connectionStatus}</span>
               </div>
-              <div className="form-group">
-                <label>Senha do Portal</label>
-                <input
-                  type="password"
-                  value={form.password || ""}
-                  onChange={(e) => handleField("password", e.target.value)}
-                />
-              </div>
-            </>
-          )}
-
-          {(form.authMethod === "token" || form.authMethod === "manual_assisted") && (
-            <div className="form-group full-width">
-              <label>Chave de API / Access Token</label>
-              <input
-                type="password"
-                placeholder="Cole o token de acesso aqui"
-                value={form.apiToken || ""}
-                onChange={(e) => handleField("apiToken", e.target.value)}
-              />
+              <button
+                onClick={() => window.location.reload()}
+                className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-xl hover:bg-white/5 transition-all"
+              >
+                🔄
+              </button>
             </div>
-          )}
-        </div>
+          </header>
 
-        <footer className="actions">
-          <button className="btn-primary" onClick={handleTestConnection} disabled={testing || saving}>
-            {testing ? "Validando..." : "Testar Conexão"}
-          </button>
-          <button className="btn-secondary" onClick={handleSave} disabled={testing || saving}>
-            {saving ? "Processando..." : "Salvar Configurações"}
-          </button>
-        </footer>
-      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <EnergyFlow />
+            </div>
+            <div className="glass p-8 rounded-[40px] border-white/5 space-y-8">
+              <h4 className="text-xs font-black text-gray-500 uppercase tracking-[0.3em]">Especificações Técnicas</h4>
+              <div className="space-y-6">
+                <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                  <span className="text-sm text-gray-400 font-bold">Inversor</span>
+                  <span className="text-sm text-white font-black">{system.inverterBrand}</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                  <span className="text-sm text-gray-400 font-bold">Modelo</span>
+                  <span className="text-sm text-white font-black">{system.inverterModel}</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                  <span className="text-sm text-gray-400 font-bold">Potência</span>
+                  <span className="text-sm text-primary font-black">{system.installedPower} Wp</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setSystem({ ...system, setupRequired: true })}
+                className="w-full p-4 mt-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] text-gray-500 font-black uppercase tracking-widest hover:text-white transition-all"
+              >
+                ⚙️ Editar Configurações
+              </button>
+            </div>
+          </div>
+
+          <ReportWidget />
+        </div>
+      )}
     </div>
   );
 }
+
