@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
 import "../styles/billing.css";
 
 /**
@@ -203,7 +202,6 @@ function PaymentModal({
 }
 
 export default function BillingPage() {
-  const { user } = useAuth();
   const [isAnnual, setIsAnnual] = useState(false);
   const [busyKey, setBusyKey] = useState<PlanCode | null>(null);
   const [payMethod, setPayMethod] = useState<PayMethod>("pix");

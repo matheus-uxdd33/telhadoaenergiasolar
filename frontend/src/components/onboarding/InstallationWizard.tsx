@@ -105,7 +105,7 @@ const QrIcon = () => (
     </svg>
 );
 
-const EyeIcon = ({ open }) => (
+const EyeIcon = ({ open }: { open: boolean }) => (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
         {open ? (
             <>
@@ -140,7 +140,7 @@ const ArrowLeft = () => (
     </svg>
 );
 
-function ProgressBar({ step, total = 3 }) {
+function ProgressBar({ step, total = 3 }: { step: number, total?: number }) {
     return (
         <div style={{ marginBottom: 32 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -174,7 +174,7 @@ function ProgressBar({ step, total = 3 }) {
     );
 }
 
-function Step1({ onNext, selectedBrand, setSelectedBrand }) {
+function Step1({ onNext, selectedBrand, setSelectedBrand }: any) {
     return (
         <div style={{ animation: "fadeSlideIn 0.4s ease" }}>
             <h2 style={{ fontSize: 24, fontWeight: 700, color: "#fff", marginBottom: 8, letterSpacing: "-0.02em" }}>
@@ -263,7 +263,7 @@ function Step1({ onNext, selectedBrand, setSelectedBrand }) {
     );
 }
 
-function Step2({ onNext, onBack, brand }) {
+function Step2({ onNext, onBack, brand }: any) {
     const [ssid, setSsid] = useState("");
     const [password, setPassword] = useState("");
     const [showPass, setShowPass] = useState(false);
@@ -460,7 +460,7 @@ function Step2({ onNext, onBack, brand }) {
     );
 }
 
-function Step3({ onFinish, onBack, brand }) {
+function Step3({ onFinish, onBack, brand }: { onFinish: any, onBack: any, brand: any }) {
     const [serial, setSerial] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -471,8 +471,8 @@ function Step3({ onFinish, onBack, brand }) {
     const [scanning, setScanning] = useState(false);
     const [scanDone, setScanDone] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const videoRef = useRef(null);
-    const streamRef = useRef(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const streamRef = useRef<MediaStream | null>(null);
 
     const startScan = async () => {
         setScanning(true);
@@ -485,7 +485,7 @@ function Step3({ onFinish, onBack, brand }) {
                 setSerial(fake);
                 setScanDone(true);
                 setScanning(false);
-                if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+                if (streamRef.current) streamRef.current.getTracks().forEach((t: MediaStreamTrack) => t.stop());
             }, 3000);
         } catch {
             const fake = "SN" + Math.floor(Math.random() * 9000000 + 1000000);
@@ -496,7 +496,7 @@ function Step3({ onFinish, onBack, brand }) {
     };
 
     const stopScan = () => {
-        if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+        if (streamRef.current) streamRef.current.getTracks().forEach((t: MediaStreamTrack) => t.stop());
         setScanning(false);
     };
 
@@ -710,7 +710,7 @@ function Step3({ onFinish, onBack, brand }) {
     );
 }
 
-function SuccessScreen({ brand, onReset }) {
+function SuccessScreen({ brand, onReset }: { brand: any, onReset: any }) {
     return (
         <div style={{ textAlign: "center", animation: "fadeSlideIn 0.5s ease", padding: "20px 0" }}>
             <div style={{

@@ -4,7 +4,7 @@ import {
 } from "recharts";
 import api from "../services/api";
 import { DashboardSummary } from "../types";
-import EnergyFlow from "../components/dashboard/EnergyFlow";
+import { EnergyFlow } from "../components/dashboard/EnergyFlow";
 import "../styles/dashboard.css";
 
 const hourlyData = [

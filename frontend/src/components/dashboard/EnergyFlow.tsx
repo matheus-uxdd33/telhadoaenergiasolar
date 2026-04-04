@@ -10,7 +10,7 @@ import React from 'react';
  * - Real-time "flow" animation
  */
 
-export const EnergyFlow: React.FC = () => {
+export const EnergyFlow: React.FC<{ generation?: number }> = ({ generation }) => {
     return (
         <div className="glass p-8 rounded-[40px] border-white/5 relative overflow-hidden h-full flex flex-col justify-between">
             <h4 className="text-xs font-black text-emerald-500 uppercase tracking-[0.3em] mb-8">Fluxo Neural de Energia</h4>

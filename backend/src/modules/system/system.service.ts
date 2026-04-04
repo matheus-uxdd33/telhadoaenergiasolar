@@ -659,7 +659,7 @@ export const getLiveTelemetryForUser = async (user?: AuthRequest["user"]): Promi
         status: "open",
       },
     ],
-    source: "adapter-fallback",
+    source: "growatt-fallback",
   };
 
   telemetryStore.set(user.tenantId, generic);
