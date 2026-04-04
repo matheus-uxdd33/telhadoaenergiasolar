@@ -1,25 +1,33 @@
 @echo off
 echo ==========================================
-echo   Solar SaaS - Deploy Assist
+echo   Telhado a Energia Solar - Deploy
+echo   github.com/matheus-uxdd33/telhadoaenergiasolar
 echo ==========================================
 echo.
-echo.
-echo 1. Salvando alterações locais...
+
+REM Gera timestamp para o commit
+for /f "tokens=1-3 delims=/ " %%a in ('date /t') do set DATA=%%c-%%b-%%a
+for /f "tokens=1 delims= " %%a in ('time /t') do set HORA=%%a
+
+echo 1. Adicionando todas as alteracoes...
 git add .
-git commit -m "Update: Solar SaaS schema fixes and Brave integration"
+
+echo 2. Criando commit...
+git commit -m "release(%DATA% %HORA%): Solar SaaS v2 - Wizard Premium + Neural Dashboard + Backend Integration"
+
 echo.
-echo 2. Enviando para o GitHub...
-echo Local: matheus-uxdd33/telhadoaenergiasolar
+echo 3. Enviando para GitHub e Netlify...
 echo.
 git push -u origin main
 if %errorlevel% neq 0 (
     echo.
-    echo [ERRO] Ocorreu um problema ao enviar. 
-    echo Verifique se voce esta logado no Git ou se o GitHub pediu senha.
+    echo [ERRO] Falha ao enviar. Verifique credenciais Git / token GitHub.
+    echo Tente: git config --global credential.helper manager
 ) else (
     echo.
-    echo [SUCESSO] Alterações enviadas! 
-    echo A Netlify deve iniciar o deploy do novo design automaticamente agora.
+    echo [SUCESSO] Codigo atualizado no GitHub!
+    echo A Netlify esta fazendo o deploy automatico agora.
+    echo Acesse: https://app.netlify.com para acompanhar o progresso.
 )
 echo.
 pause
