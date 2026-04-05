@@ -27,14 +27,21 @@ const PLANS = [
     cta: "Assinar agora",
   },
   {
-    id: "empresa_premium",
-    name: "Empresa",
-    price: 299,
-    priceAnual: 249,
-    desc: "Para integradores e empresas",
-    color: "#a855f7",
-    features: ["Inversores ilimitados", "Multi-clientes", "API de integração", "Relatório de carbono", "Gerente dedicado"],
-    cta: "Falar com consultor",
+    id: "industrial_10mw",
+    name: "Industrial 10MW",
+    price: 999,
+    priceAnual: 799,
+    desc: "Missão Crítica & Solo",
+    color: "#10b981",
+    industrial: true,
+    features: [
+      "Usinas ilimitadas", 
+      "Análise de Curva I-V", 
+      "Alertas de Fuga de Corrente", 
+      "Relatório de Manutenção Preventiva",
+      "SLA de 99.9% Garantido"
+    ],
+    cta: "Falar com Engenheiro",
   },
 ];
 
@@ -65,16 +72,9 @@ const TESTIMONIALS = [
 const PARTNER_LOGOS = ["Growatt", "Deye", "WEG", "Sungrow", "Sofar", "Canadian Solar"];
 
 const SunIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <circle cx="11" cy="11" r="4.5" fill="#10b981" />
-    <line x1="11" y1="1" x2="11" y2="4" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
-    <line x1="11" y1="18" x2="11" y2="21" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
-    <line x1="1" y1="11" x2="4" y2="11" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
-    <line x1="18" y1="11" x2="21" y2="11" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
-    <line x1="3.5" y1="3.5" x2="5.9" y2="5.9" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
-    <line x1="16.1" y1="16.1" x2="18.5" y2="18.5" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
-    <line x1="18.5" y1="3.5" x2="16.1" y2="5.9" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
-    <line x1="5.9" y1="16.1" x2="3.5" y2="18.5" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />
   </svg>
 );
 
@@ -100,39 +100,6 @@ const EyeIcon = ({ open }: { open: boolean }) => (
     )}
   </svg>
 );
-
-const StarIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M8 1L10.16 5.37L15 6L11.5 9.39L12.33 14.2L8 11.93L3.67 14.2L4.5 9.39L1 6L5.84 5.37L8 1Z" fill="#F59E0B" />
-  </svg>
-);
-
-function CountUp({ end, duration = 2000, suffix = "" }: { end: number; duration?: number; suffix?: string }) {
-  const [val, setVal] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) {
-        started.current = true;
-        const start = Date.now();
-        const tick = () => {
-          const elapsed = Date.now() - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          setVal(Math.round(eased * end));
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }
-    }, { threshold: 0.3 });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end, duration]);
-
-  return <span ref={ref}>{val.toLocaleString("pt-BR")}{suffix}</span>;
-}
 
 export default function LoginPage() {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -195,220 +162,296 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif", background: "#060d18", minHeight: "100vh", color: "#fff" }}>
+    <div className="min-h-screen bg-[#060d18] text-white overflow-x-hidden selection:bg-emerald-500/30" style={{ fontFamily: "'Inter', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        ::placeholder { color: rgba(255,255,255,0.22) !important; }
-        input:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px rgba(255,255,255,0.06) inset !important; -webkit-text-fill-color: #fff !important; }
-        ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: #060d18; } ::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.3); border-radius: 99px; }
         
-        @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes scaleIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
-        @keyframes glowPulse { 0%,100%{box-shadow:0 0 30px rgba(16,185,129,0.2)} 50%{box-shadow:0 0 60px rgba(16,185,129,0.4)} }
+        @keyframes glowPulse { 0%,100%{box-shadow:0 0 30px rgba(16,185,129,0.15)} 50%{box-shadow:0 0 60px rgba(16,185,129,0.35)} }
+        @keyframes neonPulse { 0%,100%{ opacity: 1; } 50%{ opacity: 0.7; } }
+
+        .hero-h1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity; }
+        .hero-sub { animation: fadeUp 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity; }
+        .login-card-anim { animation: scaleIn 0.8s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity; }
         
-        .hero-h1 { animation: fadeUp 0.7s ease both; }
-        .hero-sub { animation: fadeUp 0.7s 0.15s ease both; }
-        .hero-bullets { animation: fadeUp 0.7s 0.3s ease both; }
-        .hero-cta { animation: fadeUp 0.7s 0.45s ease both; }
-        .login-card { animation: fadeUp 0.8s 0.1s ease both; }
+        .glass-card { 
+          background: rgba(13, 21, 37, 0.7); 
+          backdrop-filter: blur(24px); 
+          border: 1px solid rgba(16, 185, 129, 0.2);
+          transition: all 0.3s ease;
+        }
         
-        .plan-card { transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-        .plan-card:hover { transform: translateY(-6px); }
-        .input-field:focus { border-color: rgba(16,185,129,0.7) !important; box-shadow: 0 0 0 3px rgba(16,185,129,0.12) !important; outline: none; }
-        .btn-main:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
-        .btn-main:active:not(:disabled) { transform: scale(0.98); }
-        .hover-color:hover { color: #10b981 !important; }
-        
-        .marquee-container {
-          overflow: hidden;
-          white-space: nowrap;
-          border-top: 1px solid rgba(16,185,129,0.1);
-          border-bottom: 1px solid rgba(16,185,129,0.1);
-          background: rgba(16,185,129,0.03);
-          padding: 24px 0;
+        .input-field {
+          height: 52px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 14px;
+          padding: 0 16px;
+          color: #fff;
+          font-size: 16px;
+          transition: all 0.2s;
+        }
+        .input-field:focus {
+          border-color: #10b981;
+          background: rgba(16, 185, 129, 0.05);
+          box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+          outline: none;
+        }
+
+        .btn-primary {
+          height: 54px;
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          color: #060d18;
+          font-weight: 800;
+          font-size: 16px;
+          border-radius: 14px;
+          box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-primary:active { transform: scale(0.98); }
+
+        .pill-toggle {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 99px;
+          padding: 4px;
           display: flex;
           position: relative;
         }
-        .marquee-container::before, .marquee-container::after {
-          content: ""; position: absolute; top: 0; bottom: 0; width: 150px; z-index: 2;
+        .pill-toggle button {
+          flex: 1;
+          height: 38px;
+          border-radius: 99px;
+          font-size: 13px;
+          font-weight: 700;
+          z-index: 1;
+          transition: color 0.3s;
         }
-        .marquee-container::before { left: 0; background: linear-gradient(to right, #060d18, transparent); }
-        .marquee-container::after { right: 0; background: linear-gradient(to left, #060d18, transparent); }
-        .marquee-content {
-          display: inline-flex;
-          animation: marquee 20s linear infinite;
+        .pill-slider {
+          position: absolute;
+          top: 4px;
+          bottom: 4px;
+          width: calc(50% - 4px);
+          background: #10b981;
+          border-radius: 99px;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
-        .marquee-item {
-          display: inline-flex; alignItems: center; gap: 8px;
-          margin: 0 40px; font-weight: 800; font-size: 18px; color: rgba(255,255,255,0.4);
-          letter-spacing: 1px; text-transform: uppercase;
+
+        .marquee-container {
+          overflow: hidden;
+          white-space: nowrap;
+          background: rgba(16, 185, 129, 0.02);
+          padding: 32px 0;
+          border-top: 1px solid rgba(16, 185, 129, 0.05);
+          border-bottom: 1px solid rgba(16, 185, 129, 0.05);
         }
-        
-        .grid-responsive {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 24px;
+        .marquee-content { display: inline-flex; animation: marquee 30s linear infinite; }
+        .marquee-item { margin: 0 40px; font-weight: 900; color: rgba(255, 255, 255, 0.2); font-size: 18px; letter-spacing: 2px; text-transform: uppercase; }
+
+        .industrial-card {
+          border: 2px solid #10b981;
+          box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+          animation: glowPulse 4s infinite ease-in-out;
         }
-        .testimonials-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 20px;
-          margin-top: 60px;
-        }
-        @media (max-width: 900px) {
-            .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
-            .hero-bullets { align-items: center; }
-            .hero-cta { justify-content: center; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #060d18; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 99px; }
+
+        @media (max-width: 640px) {
+          .mobile-px { padding-left: 16px; padding-right: 16px; }
         }
       `}</style>
 
       {/* ── NAVBAR ── */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: "0 40px", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between", background: scrolled ? "rgba(6,13,24,0.96)" : "transparent", backdropFilter: scrolled ? "blur(20px)" : "none", borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none", transition: "all 0.3s" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#10b981,#059669)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-[100] h-20 flex items-center justify-between px-6 md:px-12 transition-all duration-300 ${scrolled ? 'bg-[#060d18]/90 backdrop-blur-xl border-b border-white/5' : 'bg-transparent'}`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.4)]">
             <SunIcon />
           </div>
-          <span style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.5px" }}>Solar <span style={{ color: "#10b981" }}>SaaS</span></span>
+          <span className="text-xl font-black tracking-tighter">SOLAR <span className="text-emerald-500">SAAS</span></span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-          <span className="hover-color" style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "0.2s" }} onClick={scrollToPlans}>Planos</span>
-          <span className="hover-color" style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "0.2s" }}>Integrações</span>
-          <button onClick={() => setIsRegistering(true)} style={{ padding: "10px 24px", background: "rgba(16,185,129,0.1)", border: "1.5px solid rgba(16,185,129,0.6)", borderRadius: 12, color: "#10b981", fontSize: 14, fontWeight: 700, cursor: "pointer", transition: "0.2s" }}>Começar Grátis</button>
+        <div className="hidden md:flex items-center gap-8">
+          <button onClick={scrollToPlans} className="text-sm font-bold text-white/50 hover:text-emerald-500 transition-colors">PLANOS</button>
+          <button className="text-sm font-bold text-white/50 hover:text-emerald-500 transition-colors">SOLUÇÕES 10MW+</button>
+          <button onClick={() => { setIsRegistering(true); window.scrollTo({top: 0, behavior: 'smooth'}); }} className="px-6 py-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-500 text-sm font-black hover:bg-emerald-500 hover:text-[#060d18] transition-all">COMEÇAR AGORA</button>
         </div>
       </nav>
 
-      {/* ── HERO ── */}
-      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 40px 60px", background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.09) 0%, transparent 65%)", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+      {/* ── HERO & LOGIN CENTRALIZADO ── */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-4 md:px-0">
+        {/* Background Radial Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-full bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.12)_0%,transparent_60%)] -z-10 pointer-events-none"></div>
 
-        <div className="hero-grid" style={{ maxWidth: 1200, margin: "0 auto", width: "100%", display: "grid", gridTemplateColumns: "1fr 440px", gap: 64, alignItems: "center", position: "relative", zIndex: 1 }}>
-          <div>
-            <div className="hero-h1" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 99, padding: "6px 16px", marginBottom: 28, boxShadow: "0 0 20px rgba(16,185,129,0.2)" }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", animation: "pulseDot 1.8s ease-in-out infinite" }} />
-              <span style={{ fontSize: 13, color: "#10b981", fontWeight: 700 }}>+12.000 Clientes Ativos • 4.2 GWp monitorados</span>
+        <div className="max-w-[900px] w-full text-center space-y-12">
+          {/* Headline Centralizada */}
+          <div className="space-y-6">
+            <div className="hero-h1 inline-flex items-center gap-3 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></span>
+              <span className="text-xs font-black text-emerald-500 tracking-[2px] uppercase">Monitoramento de Missão Crítica</span>
             </div>
-
-            <h1 className="hero-h1" style={{ fontSize: 62, fontWeight: 900, lineHeight: 1.05, letterSpacing: "-1.5px", marginBottom: 22 }}>
-              A plataforma universal para <span style={{ WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", background: "linear-gradient(90deg, #10b981 0%, #34d399 100%)" }}>Energia Solar.</span>
+            
+            <h1 className="hero-h1 text-5xl md:text-7xl font-[900] tracking-[-3px] leading-[0.95] text-white">
+              A Plataforma Universal de <br />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-600 animate-pulse" style={{ textShadow: '0 0 40px rgba(16,185,129,0.3)' }}>Monitoramento Solar.</span>
             </h1>
 
-            <p className="hero-sub" style={{ fontSize: 18, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 500, marginBottom: 36, fontWeight: 500 }}>
-              Gerencie todas as marcas de inversores em um só lugar. Obtenha diagnósticos instantâneos e relatórios reais com 1 clique.
+            <p className="hero-sub text-lg md:text-xl text-white/40 max-w-2xl mx-auto font-medium leading-relaxed">
+              Engenharia de precisão para quem gera de 5kW a 10MW. Maximize sua performance com o sistema mais robusto do mercado brasileiro.
             </p>
-
-            <div className="hero-bullets" style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
-              {["Universal: Growatt, Deye, WEG e mais", "Relatórios Financeiros e de Carbono", "Onboarding Rápido e Descomplicado"].map((t, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <CheckIcon />
-                  <span style={{ fontSize: 15, color: "rgba(255,255,255,0.8)", fontWeight: 500 }}>{t}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
-          {/* RIGHT — Auth Card */}
-          <div className="login-card" style={{ background: "rgba(6,13,24,0.6)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 28, padding: "40px", backdropFilter: "blur(24px)", animation: "glowPulse 4s ease-in-out infinite", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)", transition: "all 0.3s ease" }}>
-            <div style={{ textAlign: "center", marginBottom: 32 }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg,#10b981,#059669)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "0 10px 25px -5px rgba(16,185,129,0.5)" }}>
-                <SunIcon />
-              </div>
-              <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 6, letterSpacing: "-0.5px" }}>{isRegistering ? "Criar Conta" : "Área do Cliente"}</h2>
-              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>{isRegistering ? "Sua usina conectada em 2 minutos." : "Acesse sua usina virtual"}</p>
+          {/* LOGIN CARD CENTRALIZADO */}
+          <div className="login-card-anim max-w-[460px] w-full mx-auto glass-card rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden">
+            {/* Pill Toggle Animado */}
+            <div className="pill-toggle mb-10">
+              <div className="pill-slider" style={{ transform: isRegistering ? 'translateX(100%)' : 'translateX(0)' }}></div>
+              <button 
+                className={!isRegistering ? 'text-[#060d18]' : 'text-white/40'} 
+                onClick={() => setIsRegistering(false)}
+              >
+                ACESSAR PAINEL
+              </button>
+              <button 
+                className={isRegistering ? 'text-[#060d18]' : 'text-white/40'} 
+                onClick={() => setIsRegistering(true)}
+              >
+                CRIAR CONTA
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="space-y-5">
               {isRegistering && (
-                <>
-                  <div style={{ marginBottom: 12 }}>
-                    <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", display: "block", marginBottom: 8, textTransform: "uppercase" }}>Seu Nome</label>
-                    <input className="input-field" type="text" placeholder="João Silva" value={name} onChange={e => setName(e.target.value)} style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, color: "#fff", fontSize: 15, fontFamily: "inherit", transition: "all 0.2s" }} />
-                  </div>
-
-                  <div style={{ marginBottom: 12 }}>
-                    <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", display: "block", marginBottom: 8, textTransform: "uppercase" }}>WhatsApp / Celular</label>
-                    <input className="input-field" type="tel" placeholder="(00) 00000-0000" value={phone} onChange={e => setPhone(phoneMask(e.target.value))} style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, color: "#fff", fontSize: 15, fontFamily: "inherit", transition: "all 0.2s" }} />
-                  </div>
-                </>
+                <div className="space-y-1.5 text-left">
+                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1">Seu Nome</label>
+                  <input className="input-field w-full" type="text" placeholder="Ex: João Silva" value={name} onChange={e => setName(e.target.value)} />
+                </div>
               )}
 
-              <div style={{ marginBottom: 12 }}>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", display: "block", marginBottom: 8, textTransform: "uppercase" }}>E-mail de Acesso</label>
-                <input className="input-field" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, color: "#fff", fontSize: 15, fontFamily: "inherit", transition: "all 0.2s" }} />
+              {isRegistering && (
+                <div className="space-y-1.5 text-left">
+                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1">WhatsApp</label>
+                  <input className="input-field w-full" type="tel" placeholder="(00) 00000-0000" value={phone} onChange={e => setPhone(phoneMask(e.target.value))} />
+                </div>
+              )}
+
+              <div className="space-y-1.5 text-left">
+                <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1">E-mail Corporativo</label>
+                <input className="input-field w-full" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
               </div>
 
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", display: "block", marginBottom: 8, textTransform: "uppercase" }}>Sua Senha</label>
-                <div style={{ position: "relative" }}>
-                  <input className="input-field" type={showPass ? "text" : "password"} placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} style={{ width: "100%", padding: "14px 46px 14px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, color: "#fff", fontSize: 15, fontFamily: "inherit", transition: "all 0.2s" }} />
-                  <button type="button" onClick={() => setShowPass(!showPass)} style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+              <div className="space-y-1.5 text-left">
+                <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1">Senha de Acesso</label>
+                <div className="relative">
+                  <input className="input-field w-full pr-12" type={showPass ? "text" : "password"} placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} />
+                  <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-emerald-500 transition-colors">
                     <EyeIcon open={showPass} />
                   </button>
                 </div>
               </div>
 
-              <button type="submit" disabled={loading} className="btn-main" style={{ width: "100%", padding: "16px", background: loading ? "rgba(16,185,129,0.5)" : "linear-gradient(135deg, #10b981 0%, #059669 100%)", border: "none", borderRadius: 14, color: "#fff", fontSize: 16, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.2s", marginBottom: 24, boxShadow: "0 10px 20px -10px rgba(16,185,129,0.5)" }}>
-                {loading ? "Aguarde..." : isRegistering ? "Criar Conta Agora →" : "Acessar Painel →"}
+              <button type="submit" disabled={loading} className="btn-primary w-full mt-4 flex items-center justify-center gap-3">
+                {loading ? "PROCESSANDO..." : isRegistering ? "CRIAR CONTA AGORA →" : "ACESSAR SISTEMA →"}
               </button>
 
-              <button type="button" onClick={() => setIsRegistering(!isRegistering)} style={{ width: "100%", padding: "14px", background: "transparent", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 14, color: "rgba(255,255,255,0.8)", fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "all 0.2s" }}>
-                {isRegistering ? "Já tem conta? Faça Login" : "Não tem conta? Cadastre-se"}
-              </button>
+              <div className="pt-4 flex flex-col gap-3">
+                <p className="text-[10px] font-bold text-white/20 uppercase tracking-[1px] flex items-center justify-center gap-2">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Criptografia de Nível Militar
+                </p>
+                <button type="button" className="text-[11px] font-black text-emerald-500/50 hover:text-emerald-500 uppercase tracking-[1px] transition-colors">
+                  Esqueci minha senha
+                </button>
+              </div>
             </form>
           </div>
+
+          <button onClick={() => window.scrollTo({top: window.innerHeight, behavior: 'smooth'})} className="hero-cta inline-flex flex-col items-center gap-2 text-white/20 hover:text-emerald-500 transition-all">
+            <span className="text-[10px] font-black uppercase tracking-[4px]">Role para explorar</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="animate-bounce"><path d="m7 13 5 5 5-5M7 6l5 5 5-5"/></svg>
+          </button>
         </div>
       </section>
 
-      {/* ── LOGO MARQUEE ── */}
+      {/* ── LOGO MARQUEE (Esteira Infinita) ── */}
       <section className="marquee-container">
         <div className="marquee-content">
           {[...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS].map((logo, idx) => (
-            <div key={idx} className="marquee-item">📍 {logo}</div>
+            <div key={idx} className="marquee-item flex items-center gap-2">
+              <span className="text-emerald-500">⚡</span> {logo}
+            </div>
           ))}
         </div>
       </section>
 
-      {/* ── PLANS SECTION ── */}
-      <section ref={plansRef} id="planos" style={{ padding: "100px 40px", background: "radial-gradient(ellipse 70% 50% at 50% 100%, rgba(16,185,129,0.03) 0%, transparent 70%)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 60 }}>
-            <span style={{ display: "inline-block", fontSize: 13, fontWeight: 800, color: "#10b981", letterSpacing: "2px", textTransform: "uppercase", marginBottom: 16 }}>Preços Transparentes</span>
-            <h2 style={{ fontSize: 48, fontWeight: 900, letterSpacing: "-1.5px", marginBottom: 16 }}>Escolha o plano ideal</h2>
-
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 99, padding: "8px 8px 8px 24px", marginTop: 24 }}>
-              <span style={{ fontSize: 15, color: annual ? "rgba(255,255,255,0.4)" : "#fff", fontWeight: 700 }}>Mensal</span>
-              <button onClick={() => setAnnual(!annual)} style={{ width: 52, height: 28, borderRadius: 99, border: "none", cursor: "pointer", background: annual ? "#10b981" : "rgba(255,255,255,0.15)", position: "relative", transition: "background 0.25s" }}>
-                <span style={{ position: "absolute", top: 3, left: annual ? 27 : 3, width: 22, height: 22, borderRadius: "50%", background: "#fff", transition: "left 0.25s", display: "block" }} />
+      {/* ── PLANS SECTION (A Prova do Valor) ── */}
+      <section ref={plansRef} className="py-32 px-6 bg-[#060d18] relative">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center space-y-4 mb-20">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight">Invista na sua <span className="text-emerald-500">Eficiência.</span></h2>
+            <p className="text-white/40 text-lg font-medium">Planos escaláveis de residências a usinas de solo.</p>
+            
+            <div className="flex items-center justify-center gap-6 pt-10">
+              <span className={`text-sm font-black tracking-widest ${!annual ? 'text-white' : 'text-white/20'}`}>MENSAL</span>
+              <button onClick={() => setAnnual(!annual)} className="w-16 h-8 bg-emerald-500/10 border border-emerald-500/30 rounded-full relative transition-all">
+                <div className={`absolute top-1 w-6 h-6 bg-emerald-500 rounded-full transition-all duration-300 ${annual ? 'left-9 shadow-[0_0_20px_#10b981]' : 'left-1'}`}></div>
               </button>
-              <span style={{ fontSize: 15, color: annual ? "#fff" : "rgba(255,255,255,0.4)", fontWeight: 700 }}>Anual</span>
-              {annual && <span style={{ fontSize: 12, fontWeight: 800, color: "#060d18", background: "#10b981", borderRadius: 99, padding: "4px 12px", marginLeft: 4, letterSpacing: "0.5px" }}>ECONOMIZE 20%</span>}
+              <div className="flex items-center gap-3">
+                <span className={`text-sm font-black tracking-widest ${annual ? 'text-white' : 'text-white/20'}`}>ANUAL</span>
+                <span className="bg-emerald-500 text-[#060d18] text-[10px] px-3 py-1 rounded-full font-black animate-pulse">20% OFF</span>
+              </div>
             </div>
           </div>
 
-          <div className="grid-responsive">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {PLANS.map((plan) => {
               const price = annual ? plan.priceAnual : plan.price;
               return (
-                <div key={plan.id} className="plan-card" style={{ background: plan.popular ? "rgba(16,185,129,0.08)" : "rgba(255,255,255,0.02)", border: plan.popular ? "2px solid rgba(16,185,129,0.5)" : "1px solid rgba(255,255,255,0.08)", borderRadius: 24, padding: "40px 32px", position: "relative" }}>
-                  {plan.popular && <span style={{ position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)", background: "#10b981", color: "#060d18", padding: "4px 16px", borderRadius: 99, fontSize: 11, fontWeight: 800, textTransform: "uppercase" }}>Mais Escolhido</span>}
-                  <h3 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>{plan.name}</h3>
-                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 24 }}>{plan.desc}</p>
-                  <div style={{ marginBottom: 32 }}>
-                    <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>R$ </span>
-                    <span style={{ fontSize: 42, fontWeight: 900 }}>{price}</span>
-                    <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>/mês</span>
+                <div 
+                  key={plan.id} 
+                  className={`relative p-10 rounded-[40px] flex flex-col transition-all duration-500 hover:translate-y-[-10px] ${
+                    plan.industrial 
+                    ? 'industrial-card bg-emerald-500/5' 
+                    : 'glass-card hover:border-emerald-500/40'
+                  }`}
+                >
+                  {plan.popular && <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-[#060d18] px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[2px]">Mais Escolhido</span>}
+                  
+                  <div className="mb-10">
+                    <h3 className="text-2xl font-black mb-3">{plan.name}</h3>
+                    <p className="text-white/40 text-sm font-medium leading-relaxed">{plan.desc}</p>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
+
+                  <div className="mb-12">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl font-bold text-white/30">R$</span>
+                      <span className="text-6xl font-black tracking-tighter">{price}</span>
+                      <span className="text-sm font-bold text-white/30 uppercase tracking-[2px]">/mês</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-5 mb-12 flex-grow">
                     {plan.features.map((f, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div key={i} className="flex items-center gap-4">
                         <CheckIcon />
-                        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>{f}</span>
+                        <span className="text-sm text-white/60 font-semibold">{f}</span>
                       </div>
                     ))}
                   </div>
-                  <button onClick={() => setIsRegistering(true)} className="btn-main" style={{ width: "100%", padding: "14px", background: plan.popular ? "#10b981" : "rgba(255,255,255,0.05)", border: plan.popular ? "none" : "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: plan.popular ? "#060d18" : "#fff", fontSize: 15, fontWeight: 800, cursor: "pointer", transition: "0.2s" }}>{plan.cta}</button>
+
+                  <button 
+                    onClick={() => { setIsRegistering(true); window.scrollTo({top: 0, behavior: 'smooth'}); }} 
+                    className={`w-full h-[60px] rounded-2xl font-black text-sm tracking-[2px] uppercase transition-all ${
+                      plan.industrial 
+                      ? 'bg-emerald-500 text-[#060d18] shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:shadow-[0_0_50px_rgba(16,185,129,0.6)]' 
+                      : 'bg-white/5 border border-white/10 hover:bg-emerald-500 hover:text-[#060d18]'
+                    }`}
+                  >
+                    {plan.cta}
+                  </button>
                 </div>
               );
             })}
@@ -416,34 +459,22 @@ export default function LoginPage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section style={{ padding: "100px 40px", background: "#060d18" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <h2 style={{ fontSize: 36, fontWeight: 900 }}>O que dizem nossos clientes</h2>
+      {/* ── FOOTER ── */}
+      <footer className="py-20 px-6 border-t border-white/5 text-center space-y-8 bg-[#040a14]">
+        <div className="flex items-center justify-center gap-3 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer">
+          <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+            <SunIcon />
           </div>
-          <div className="testimonials-grid">
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", padding: 32, borderRadius: 24 }}>
-                <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
-                  {[...Array(t.stars)].map((_, i) => <StarIcon key={i} />)}
-                </div>
-                <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 24 }}>"{t.content}"</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{t.avatar}</div>
-                  <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 700 }}>{t.name}</h4>
-                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <span className="text-sm font-black tracking-tighter">SOLAR SAAS</span>
+        </div>
+        <div className="space-y-4">
+          <p className="text-[11px] font-black text-white/20 uppercase tracking-[5px]">Engenharia de Monitoramento de Elite</p>
+          <div className="flex justify-center gap-8 text-[10px] font-bold text-white/10 uppercase tracking-[2px]">
+            <a href="#" className="hover:text-emerald-500 transition-colors">Termos</a>
+            <a href="#" className="hover:text-emerald-500 transition-colors">Privacidade</a>
+            <a href="#" className="hover:text-emerald-500 transition-colors">Suporte</a>
           </div>
         </div>
-      </section>
-
-      <footer style={{ padding: "60px 40px", textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", fontWeight: 600, letterSpacing: "1px" }}>© 2026 SOLAR SAAS • TODOS OS DIREITOS RESERVADOS</p>
       </footer>
     </div>
   );
