@@ -170,7 +170,7 @@ export default function SystemPage() {
         Voltar para o Painel
       </button>
 
-      {system.setupRequired ? (
+      {system && system.setupRequired ? (
         <div className="animate-in fade-in zoom-in duration-700">
           <div className="text-center mb-12">
             <h1 className="text-5xl font-black text-white mb-4 tracking-tighter">Bem-vindo ao Futuro</h1>
@@ -178,7 +178,7 @@ export default function SystemPage() {
           </div>
           <InstallationWizard />
         </div>
-      ) : (
+      ) : system ? (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
@@ -229,7 +229,7 @@ export default function SystemPage() {
                 </div>
               </div>
               <button
-                onClick={() => setSystem({ ...system, setupRequired: true })}
+                onClick={() => system && setSystem({ ...system, setupRequired: true })}
                 className="w-full p-4 mt-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] text-gray-500 font-black uppercase tracking-widest hover:text-white transition-all"
               >
                 ⚙️ Editar Configurações
@@ -238,6 +238,12 @@ export default function SystemPage() {
           </div>
 
           <ReportWidget />
+        </div>
+      ) : (
+        <div className="error-screen text-center py-20">
+          <h2 className="text-2xl font-black text-white mb-4">Ops! Problema de Sincronização</h2>
+          <p className="text-gray-400 mb-8">Não conseguimos carregar os dados da sua usina.</p>
+          <button onClick={() => window.location.reload()} className="h-12 px-8 bg-emerald-500 text-[#050b14] font-black rounded-xl">Tentar Novamente</button>
         </div>
       )}
     </div>
