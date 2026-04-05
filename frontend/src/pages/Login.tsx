@@ -122,31 +122,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050b14] text-white selection:bg-emerald-500/30 overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <style>{`
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes pulseNeon { 0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); } 50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); } }
-        @keyframes glowGreen { 0%, 100% { filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.3)); } 50% { filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.6)); } }
-        
-        .glass-header { background: rgba(5, 11, 20, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
-        .glass-card { background: rgba(13, 21, 37, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(16,185,129,0.1); }
-        .industrial-neon { border: 2px solid #10b981 !important; box-shadow: 0 0 40px rgba(16, 185, 129, 0.3) !important; }
-        
-        .pill-toggle { background: rgba(255, 255, 255, 0.05); border-radius: 99px; padding: 4px; display: flex; position: relative; }
-        .pill-slider { position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); background: #10b981; border-radius: 99px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-        
-        .marquee-content { display: inline-flex; animation: marquee 30s linear infinite; }
-        .input-dark { background: rgba(5, 11, 20, 0.8) !important; border: 1px solid rgba(255,255,255,0.05) !important; transition: all 0.2s; }
-        .input-dark:focus { border-color: #10b981 !important; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important; outline: none; }
-        
-        .btn-neon { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #050b14; font-weight: 800; transition: all 0.2s; }
-        .btn-neon:hover { transform: scale(1.02); filter: brightness(1.1); box-shadow: 0 0 30px rgba(16, 185, 129, 0.4); }
-        .btn-neon:active { transform: scale(0.98); }
-
-        .section-fade { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
-      `}</style>
-
+    <div className="min-h-screen bg-[#050b14] text-white selection:bg-emerald-500/30 overflow-x-hidden">
       {/* ── HEADER ── */}
       <header className={`fixed top-0 left-0 right-0 z-[100] h-20 glass-header flex items-center justify-between px-6 md:px-12 transition-all ${scrolled ? 'border-b border-white/5' : ''}`}>
         <div className="flex items-center gap-3">
@@ -165,11 +141,11 @@ export default function LoginPage() {
 
       {/* ── SECTION 1: HERO & LOGIN ── */}
       <section className="min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-4 md:px-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08)_0%,transparent_50%)]">
-        <div className="max-w-[1000px] w-full text-center space-y-8 section-fade">
+        <div className="max-w-[1000px] w-full text-center space-y-8 animate-fade-up">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-7xl font-black tracking-[-2px] leading-[0.95] uppercase">
               Monitoramento de <br />
-              <span className="text-emerald-500" style={{ animation: 'glowGreen 3s infinite' }}>Missão Crítica</span>
+              <span className="text-emerald-500 animate-glow-green">Missão Crítica</span>
             </h1>
             <p className="text-lg md:text-2xl text-white/40 font-medium tracking-tight">
               Engenharia de precisão para geração ininterrupta de <span className="text-white">5kW a 10MW</span>.
@@ -179,16 +155,19 @@ export default function LoginPage() {
           {/* LOGIN CARD */}
           <div className="w-full max-w-[420px] mx-auto glass-card rounded-[32px] p-8 md:p-10 space-y-8">
             {/* Pill Toggle */}
-            <div className="pill-toggle">
-              <div className="pill-slider" style={{ transform: isRegistering ? 'translateX(100%)' : 'translateX(0)' }}></div>
+            <div className="relative flex p-1 bg-white/5 rounded-full">
+              <div 
+                className="absolute top-1 left-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-emerald-500 rounded-full transition-transform duration-300 ease-out shadow-lg shadow-emerald-500/20"
+                style={{ transform: isRegistering ? 'translateX(100%)' : 'translateX(0)' }}
+              />
               <button 
-                className={`flex-1 text-[11px] font-black tracking-widest uppercase z-10 transition-colors ${!isRegistering ? 'text-[#050b14]' : 'text-white/40'}`}
+                className={`relative flex-1 py-2 text-[11px] font-black tracking-widest uppercase z-10 transition-colors duration-300 ${!isRegistering ? 'text-[#050b14]' : 'text-white/40'}`}
                 onClick={() => setIsRegistering(false)}
               >
                 Acessar Painel
               </button>
               <button 
-                className={`flex-1 text-[11px] font-black tracking-widest uppercase z-10 transition-colors ${isRegistering ? 'text-[#050b14]' : 'text-white/40'}`}
+                className={`relative flex-1 py-2 text-[11px] font-black tracking-widest uppercase z-10 transition-colors duration-300 ${isRegistering ? 'text-[#050b14]' : 'text-white/40'}`}
                 onClick={() => setIsRegistering(true)}
               >
                 Criar Conta
@@ -205,7 +184,7 @@ export default function LoginPage() {
                       placeholder="Ex: João da Silva" 
                       value={name} 
                       onChange={e => setName(e.target.value)}
-                      className="w-full h-12 rounded-xl px-4 input-dark"
+                      className="w-full h-12 rounded-xl px-4 bg-[#050b14]/80 border border-white/5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all outline-none"
                     />
                   </div>
                   <div className="space-y-1.5 text-left">
@@ -215,7 +194,7 @@ export default function LoginPage() {
                       placeholder="(00) 00000-0000" 
                       value={phone} 
                       onChange={e => setPhone(phoneMask(e.target.value))}
-                      className="w-full h-12 rounded-xl px-4 input-dark"
+                      className="w-full h-12 rounded-xl px-4 bg-[#050b14]/80 border border-white/5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all outline-none"
                     />
                   </div>
                 </>
@@ -227,7 +206,7 @@ export default function LoginPage() {
                   placeholder="seu@email.com" 
                   value={email} 
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full h-12 rounded-xl px-4 input-dark"
+                  className="w-full h-12 rounded-xl px-4 bg-[#050b14]/80 border border-white/5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all outline-none"
                 />
               </div>
               <div className="space-y-1.5 text-left">
@@ -238,9 +217,9 @@ export default function LoginPage() {
                     placeholder="••••••••" 
                     value={password} 
                     onChange={e => setPassword(e.target.value)}
-                    className="w-full h-12 rounded-xl px-4 pr-12 input-dark"
+                    className="w-full h-12 rounded-xl px-4 pr-12 bg-[#050b14]/80 border border-white/5 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all outline-none"
                   />
-                  <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2">
+                  <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 hover:text-emerald-500 transition-colors">
                     <EyeIcon open={showPass} />
                   </button>
                 </div>
@@ -249,7 +228,7 @@ export default function LoginPage() {
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-full h-14 btn-neon rounded-2xl text-[13px] uppercase tracking-widest mt-6 flex items-center justify-center gap-2"
+                className="w-full h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 text-[#050b14] font-black rounded-2xl text-[13px] uppercase tracking-widest mt-6 flex items-center justify-center gap-2 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] active:scale-[0.98] transition-all disabled:opacity-50"
               >
                 {loading ? "Processando..." : (
                   <>
@@ -264,10 +243,10 @@ export default function LoginPage() {
       </section>
 
       {/* ── SECTION 2: MARQUEE LOGOS ── */}
-      <section className="marquee-container py-12">
-        <div className="marquee-content opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+      <section className="py-12 border-y border-white/5 bg-white/[0.02] overflow-hidden">
+        <div className="flex animate-marquee opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
           {[...PARTNER_LOGOS, ...PARTNER_LOGOS].map((logo, i) => (
-            <div key={i} className="flex items-center gap-2 mx-12 font-black text-xl tracking-tighter text-white/20 uppercase">
+            <div key={i} className="flex items-center gap-2 mx-12 font-black text-xl tracking-tighter text-white/20 uppercase whitespace-nowrap">
               <span className="text-emerald-500">⚡</span> {logo}
             </div>
           ))}
@@ -288,7 +267,7 @@ export default function LoginPage() {
             {PLANS.map(plan => (
               <div 
                 key={plan.id}
-                className={`p-10 rounded-[40px] glass-card flex flex-col space-y-8 transition-all hover:translate-y-[-10px] ${plan.industrial ? 'industrial-neon' : ''}`}
+                className={`p-10 rounded-[40px] glass-card flex flex-col space-y-8 transition-all hover:translate-y-[-10px] hover:border-emerald-500/40 ${plan.industrial ? 'industrial-neon' : ''}`}
               >
                 {plan.popular && <span className="bg-emerald-500 text-[#050b14] text-[9px] font-black uppercase tracking-widest px-4 py-1 rounded-full w-fit">Mais Escolhido</span>}
                 <div className="space-y-2">
@@ -309,7 +288,7 @@ export default function LoginPage() {
                 </div>
                 <button 
                   onClick={() => { setIsRegistering(true); window.scrollTo({top: 0, behavior: 'smooth'}); }}
-                  className={`w-full h-14 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all ${plan.industrial ? 'btn-neon' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
+                  className={`w-full h-14 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all ${plan.industrial ? 'bg-emerald-500 text-[#050b14] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
                 >
                   {plan.cta}
                 </button>
