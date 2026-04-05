@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/billing.css";
 
 /**
@@ -66,6 +67,7 @@ function PaymentModal({
   onClose: () => void;
 }) {
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   const copyPix = () => {
     if (result.pixCode) {
@@ -196,6 +198,13 @@ function PaymentModal({
             </div>
           )}
         </div>
+        
+        <button 
+          onClick={() => navigate("/dashboard")}
+          style={{ width: "100%", padding: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", color: "rgba(255,255,255,0.6)", fontSize: "12px", fontWeight: 700, marginTop: "16px", cursor: "pointer" }}
+        >
+          Retornar ao Painel
+        </button>
       </div>
     </div>
   );

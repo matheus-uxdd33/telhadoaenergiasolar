@@ -40,8 +40,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         password,
         options: {
           data: {
-            name,
-            phone,
+            full_name: name,
+            phone: phone,
             tenant_id: "tenant-demo",
             plan_code: "emergency_7d",
             plan_status: "trial"
@@ -52,19 +52,18 @@ export const useAuthStore = create<AuthStore>((set) => ({
       if (error) throw error;
       if (!data.user) throw new Error("Falha ao criar o usuário.");
 
-      // 2. Insert into public.profiles
-      // Using upsert to handle potential race conditions or existing profile
+      // 2. Insert into public.profiles (Using full_name and phone as requested)
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
           id: data.user.id,
-          name: name,
-          whatsapp: phone
+          full_name: name,
+          phone: phone,
+          updated_at: new Date().toISOString(),
         });
 
       if (profileError) {
         console.error("Erro ao salvar perfil: ", profileError.message);
-        // We don't throw here to not break the signup flow if auth succeeded
       }
       
       toast.success("Conta criada com sucesso!");
@@ -75,13 +74,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   initialize: () => {
-    // Listen to Auth State Changes - This is the "Regra de Ouro"
+    // Listen to Auth State Changes
     supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         const u: User = {
           id: session.user.id,
           email: session.user.email!,
-          name: session.user.user_metadata?.name || session.user.email!.split("@")[0],
+          name: session.user.user_metadata?.full_name || session.user.email!.split("@")[0],
           tenantId: session.user.user_metadata?.tenant_id || "tenant-demo",
           planCode: session.user.user_metadata?.plan_code || "emergency_7d",
           planStatus: session.user.user_metadata?.plan_status || "trial",

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import InverterScanner from "./InverterScanner";
 
 const BRANDS = [
     {
@@ -542,77 +543,8 @@ function Step3({ onFinish, onBack, brand }: { onFinish: any, onBack: any, brand:
                 Último passo! Escaneie o QR Code do inversor e confirme seu acesso.
             </p>
 
-            <div style={{ marginBottom: 20 }}>
-                <label style={{ fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.4)", display: "block", marginBottom: 8 }}>
-                    Número de série do inversor
-                </label>
-                {scanning ? (
-                    <div style={{
-                        background: "#000", borderRadius: 14, overflow: "hidden",
-                        border: "1.5px solid rgba(16,185,129,0.4)", position: "relative", marginBottom: 10,
-                    }}>
-                        <video ref={videoRef} autoPlay playsInline style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
-                        <div style={{
-                            position: "absolute", inset: 0,
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                        }}>
-                            <div style={{
-                                width: 140, height: 140,
-                                border: "2px solid #10b981",
-                                borderRadius: 12, position: "relative",
-                            }}>
-                                <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 2, background: "rgba(16,185,129,0.8)", animation: "scanLine 1.5s ease-in-out infinite" }} />
-                            </div>
-                        </div>
-                        <button
-                            onClick={stopScan}
-                            style={{
-                                position: "absolute", top: 10, right: 10,
-                                background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.2)",
-                                borderRadius: 8, color: "#fff", fontSize: 11, padding: "4px 10px", cursor: "pointer",
-                            }}
-                        >
-                            Cancelar
-                        </button>
-                    </div>
-                ) : (
-                    <div style={{ display: "flex", gap: 8 }}>
-                        <div style={{ position: "relative", flex: 1 }}>
-                            <input
-                                value={serial}
-                                onChange={e => setSerial(e.target.value)}
-                                placeholder="Ex: SN1234567"
-                                style={{
-                                    width: "100%", padding: "14px 16px",
-                                    background: scanDone ? "rgba(16,185,129,0.06)" : "rgba(255,255,255,0.05)",
-                                    border: `1.5px solid ${scanDone ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.1)"}`,
-                                    borderRadius: 12, color: "#fff", fontSize: 14, outline: "none", fontFamily: "monospace",
-                                }}
-                            />
-                            {scanDone && (
-                                <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)" }}>
-                                    <GreenCheck size={16} />
-                                </div>
-                            )}
-                        </div>
-                        <button
-                            onClick={startScan}
-                            style={{
-                                padding: "14px 16px", background: "rgba(16,185,129,0.1)",
-                                border: "1.5px solid rgba(16,185,129,0.3)", borderRadius: 12,
-                                cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
-                                color: "#10b981", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap",
-                            }}
-                        >
-                            <CameraIcon /> Escanear QR
-                        </button>
-                    </div>
-                )}
-                {scanDone && (
-                    <div style={{ fontSize: 11, color: "rgba(16,185,129,0.7)", marginTop: 6 }}>
-                        ✓ Número de série capturado automaticamente
-                    </div>
-                )}
+            <div style={{ marginBottom: 24 }}>
+                <InverterScanner />
             </div>
 
             <div style={{
