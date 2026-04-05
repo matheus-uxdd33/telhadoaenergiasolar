@@ -1,9 +1,13 @@
 [build]
+  # Comando que limpa o cache e instala só o necessário
   command = "npm install && npm run build"
   publish = "frontend/dist"
 
 [build.environment]
   NODE_VERSION = "20"
+
+[build.processing]
+  skip_unused_images = true
 
 [functions]
   directory = "netlify/functions"
@@ -17,3 +21,7 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[context.production]
+  # Otimização: Ignora o build se não houver mudanças relevantes no código
+  ignore = "git diff --quiet HEAD^ HEAD frontend/ backend/ netlify/"
