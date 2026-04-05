@@ -40,41 +40,28 @@ const InverterConnector = () => {
   };
 
   const onScanFailure = (error: any) => {
-    // Silently ignore scan failures (they happen every frame)
+    // Silently ignore scan failures
   };
 
   const handleLocalHandshake = async () => {
     setIsConnecting(true);
     setConnectionStatus('searching');
-    
-    // IP padrão do data logger (AP Mode)
     const LOGGER_IP = '10.10.100.254';
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     try {
-      toast.loading('Tentando handshake com o inversor...', { id: 'handshake' });
-      
-      // Tentativa de conexão real com o IP do Data Logger
-      // Geralmente os loggers usam porta 80 ou portas específicas de fabricante
-      const response = await fetch(`http://${LOGGER_IP}/status`, {
+      toast.loading('Tentando handshake...', { id: 'handshake' });
+      await fetch(`http://${LOGGER_IP}/status`, {
         method: 'GET',
-        mode: 'no-cors', // Importante para cross-origin em AP Mode
+        mode: 'no-cors',
         signal: controller.signal
       });
-
-      // Como usamos 'no-cors', não teremos acesso ao body, 
-      // mas se a promise resolve, a rede está acessível.
       setConnectionStatus('connected');
-      toast.success('Inversor detectado na rede local!', { id: 'handshake' });
+      toast.success('Inversor detectado!', { id: 'handshake' });
     } catch (error: any) {
-      console.error('Handshake failed:', error);
       setConnectionStatus('error');
-      if (error.name === 'AbortError') {
-        toast.error('Timeout: Verifique se você está conectado ao Wi-Fi do Inversor.', { id: 'handshake' });
-      } else {
-        toast.error('Falha na conexão local. Verifique o sinal Wi-Fi.', { id: 'handshake' });
-      }
+      toast.error('Falha na conexão local.', { id: 'handshake' });
     } finally {
       setIsConnecting(false);
       clearTimeout(timeoutId);
@@ -82,78 +69,129 @@ const InverterConnector = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-[#0a1428] border border-emerald-500/20 rounded-2xl shadow-2xl backdrop-blur-xl">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2">Conectar Inversor</h2>
-        <p className="text-emerald-500/60 text-sm">Escaneie o QR Code ou conecte via Wi-Fi Local</p>
+    <div style={{ 
+      maxWidth: 440, 
+      margin: '0 auto', 
+      padding: 40, 
+      background: 'rgba(6, 13, 24, 0.6)', 
+      border: '1px solid rgba(16, 185, 129, 0.2)', 
+      borderRadius: 28, 
+      backdropFilter: 'blur(24px)',
+      boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
+    }}>
+      <style>{`
+        @keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(16,185,129,0.1)} 50%{box-shadow:0 0 40px rgba(16,185,129,0.3)} }
+        .connector-card { animation: glowPulse 4s ease-in-out infinite; }
+        .input-field:focus { border-color: #10b981 !important; outline: none; box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+        .btn-action { transition: all 0.2s; cursor: pointer; }
+        .btn-action:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-action:active { transform: scale(0.98); }
+      `}</style>
+
+      <div style={{ textAlign: 'center', marginBottom: 32 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Conectar Inversor</h2>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>Siga o passo a passo para sincronizar</p>
       </div>
 
-      {/* QR Code Scanner Section */}
-      <div className="mb-8">
+      {/* QR Code Section */}
+      <div style={{ marginBottom: 32 }}>
         {!isScanning ? (
           <button
             onClick={() => setIsScanning(true)}
-            className="w-full py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 font-semibold hover:bg-emerald-500/20 transition-all flex items-center justify-center gap-3"
+            className="btn-action"
+            style={{ 
+              width: '100%', 
+              padding: '16px', 
+              background: 'rgba(16, 185, 129, 0.1)', 
+              border: '1px solid rgba(16, 185, 129, 0.3)', 
+              borderRadius: 16, 
+              color: '#10b981', 
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10
+            }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/></svg>
-            Escanear QR Code (S/N)
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/></svg>
+            Escanear QR Code
           </button>
         ) : (
-          <div className="relative">
-            <div id="qr-reader" className="overflow-hidden rounded-xl border-2 border-emerald-500/50"></div>
+          <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: '2px solid #10b981' }}>
+            <div id="qr-reader"></div>
             <button
               onClick={() => setIsScanning(false)}
-              className="absolute top-2 right-2 p-2 bg-red-500/20 text-red-400 rounded-full hover:bg-red-500/40 transition-all"
+              style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(239, 68, 68, 0.2)', border: 'none', borderRadius: '50%', width: 32, height: 32, color: '#ef4444', cursor: 'pointer' }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              ×
             </button>
           </div>
         )}
       </div>
 
-      {/* Manual Input Section */}
-      <div className="space-y-4">
-        <div>
-          <label className="block text-xs font-bold text-emerald-500/50 uppercase tracking-wider mb-2">Número de Série (S/N)</label>
-          <input
-            type="text"
-            value={serialNumber}
-            onChange={(e) => setSerialNumber(e.target.value)}
-            placeholder="Ex: 1234567890"
-            className="w-full px-4 py-3 bg-white/5 border border-emerald-500/20 rounded-xl text-white focus:outline-none focus:border-emerald-500 transition-all"
-          />
-        </div>
-
-        {/* Local Handshake Section */}
-        <div className="pt-4 border-t border-emerald-500/10">
-          <p className="text-xs text-white/40 mb-4 text-center">
-            Certifique-se de estar conectado ao Wi-Fi gerado pelo inversor (ex: <strong>Datalogger_XXXX</strong>)
-          </p>
-          <button
-            onClick={handleLocalHandshake}
-            disabled={isConnecting}
-            className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-3 ${
-              connectionStatus === 'connected' 
-              ? 'bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' 
-              : 'bg-white/5 border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10'
-            }`}
-          >
-            {isConnecting ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-emerald-500 border-t-transparent"></div>
-            ) : connectionStatus === 'connected' ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                Conectado com Sucesso!
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
-                Realizar Handshake Local
-              </>
-            )}
-          </button>
-        </div>
+      {/* S/N Input */}
+      <div style={{ marginBottom: 24 }}>
+        <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 8, textTransform: 'uppercase' }}>Número de Série (S/N)</label>
+        <input
+          type="text"
+          value={serialNumber}
+          onChange={(e) => setSerialNumber(e.target.value)}
+          placeholder="Ex: 1234567890"
+          className="input-field"
+          style={{ 
+            width: '100%', 
+            padding: '14px 16px', 
+            background: 'rgba(255, 255, 255, 0.03)', 
+            border: '1px solid rgba(255, 255, 255, 0.1)', 
+            borderRadius: 14, 
+            color: '#fff', 
+            fontSize: 15,
+            transition: '0.2s'
+          }}
+        />
       </div>
+
+      {/* Handshake Section */}
+      <div style={{ paddingTop: 24, borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textAlign: 'center', marginBottom: 20 }}>
+          Conecte-se ao Wi-Fi do inversor (<strong>AP Mode</strong>) para realizar o handshake local.
+        </p>
+        <button
+          onClick={handleLocalHandshake}
+          disabled={isConnecting}
+          className="btn-action"
+          style={{ 
+            width: '100%', 
+            padding: '16px', 
+            background: connectionStatus === 'connected' ? '#10b981' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+            border: 'none', 
+            borderRadius: 14, 
+            color: connectionStatus === 'connected' ? '#060d18' : '#fff', 
+            fontWeight: 800,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            boxShadow: connectionStatus === 'connected' ? '0 0 20px rgba(16,185,129,0.4)' : 'none'
+          }}
+        >
+          {isConnecting ? (
+            <div style={{ width: 20, height: 20, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+          ) : connectionStatus === 'connected' ? (
+            <>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Conectado!
+            </>
+          ) : (
+            <>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+              Handshake Local
+            </>
+          )}
+        </button>
+      </div>
+
+      <style>{` @keyframes spin { to { transform: rotate(360deg); } } `}</style>
     </div>
   );
 };
