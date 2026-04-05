@@ -156,15 +156,15 @@ export default function Layout({ children }: LayoutProps) {
         <nav className="bottom-nav">
           <NavLink to="/dashboard" className={({ isActive }) => `bottom-nav-item ${isActive ? "active" : ""}`}>
             <span className="bottom-nav-icon">📊</span>
-            <span>Home</span>
+            <span>Painel</span>
           </NavLink>
           <NavLink to="/system" className={({ isActive }) => `bottom-nav-item ${isActive ? "active" : ""}`}>
             <span className="bottom-nav-icon">⚙️</span>
-            <span>Sistema</span>
+            <span>Gerar</span>
           </NavLink>
           <NavLink to="/billing" className={({ isActive }) => `bottom-nav-item ${isActive ? "active" : ""}`}>
             <span className="bottom-nav-icon">💳</span>
-            <span>Planos</span>
+            <span>Assinar</span>
           </NavLink>
           <NavLink to="/profile" className={({ isActive }) => `bottom-nav-item ${isActive ? "active" : ""}`}>
             <span className="bottom-nav-icon">👤</span>
@@ -177,8 +177,9 @@ export default function Layout({ children }: LayoutProps) {
       <div className="fab-container">
         <div className={`fab-menu ${fabOpen ? "open" : ""}`}>
           <button onClick={() => handleNavigate("/dashboard")} className="fab-menu-item">🏠 Início</button>
+          <button onClick={() => window.open("https://wa.me/5500000000000", "_blank")} className="fab-menu-item">💬 Suporte WhatsApp</button>
+          <button onClick={() => window.open("https://youtube.com", "_blank")} className="fab-menu-item">🎥 Vídeo Tutorial</button>
           <button onClick={() => handleNavigate("/billing")} className="fab-menu-item">💳 Trocar de Plano</button>
-          <button onClick={() => handleNavigate("/support")} className="fab-menu-item">🎧 Suporte Técnico</button>
           <button onClick={handleLogout} className="fab-menu-item" style={{color: '#ef4444'}}>🚪 Sair</button>
         </div>
         <button className="fab-main" onClick={() => setFabOpen(!fabOpen)}>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/billing.css";
 
 /**
@@ -211,11 +211,15 @@ function PaymentModal({
 }
 
 export default function BillingPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isAnnual, setIsAnnual] = useState(false);
   const [busyKey, setBusyKey] = useState<PlanCode | null>(null);
   const [payMethod, setPayMethod] = useState<PayMethod>("pix");
   const [checkoutResult, setCheckoutResult] = useState<{ result: CheckoutResult; planName: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const isLimitExceeded = location.search.includes("reason=limit_exceeded");
 
   const getPrice = (price: number) => isAnnual ? price * 0.8 : price;
 
@@ -241,6 +245,21 @@ export default function BillingPage() {
 
   return (
     <div className="system-page max-w-6xl mx-auto py-12 px-6">
+      <style>{`
+        @keyframes glowGreen { 0%,100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); } 50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); } }
+        .limit-btn { animation: glowGreen 2s infinite; border: 2px solid #10b981 !important; }
+      `}</style>
+
+      {isLimitExceeded && (
+        <button 
+          onClick={() => navigate(-1)}
+          className="limit-btn mb-8 h-[52px] px-6 bg-emerald-500/10 rounded-2xl text-emerald-500 font-black text-sm flex items-center gap-3 cursor-pointer transition-all hover:bg-emerald-500/20"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          ← Voltar para resolver agora
+        </button>
+      )}
+
       {checkoutResult && (
         <PaymentModal
           result={checkoutResult.result}

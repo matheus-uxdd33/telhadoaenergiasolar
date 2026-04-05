@@ -188,12 +188,16 @@ export default function DashboardPage() {
       ) : (
         <>
           <div className="summary-grid">
-            <div className="premium-card">
+            <div 
+              className="premium-card clickable-card" 
+              onClick={() => navigate("/reports")}
+              style={{ cursor: 'pointer' }}
+            >
               <span className="card-label">GERAÇÃO HOJE</span>
               <div className="card-value">
                 {finalSummary.todayGeneration.toFixed(1)} <span className="unit">kWh</span>
               </div>
-              <span className="card-delta positive">↑ Monitoramento térmico OK</span>
+              <span className="card-delta positive">↑ Ver Relatórios Detalhados</span>
             </div>
 
             <div className="premium-card highlight">
