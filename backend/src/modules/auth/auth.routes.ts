@@ -16,6 +16,7 @@ const registerSchema = z.object({
   email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Senha deve ter ao menos 6 caracteres"),
   name: z.string().min(2).optional(),
+  phone: z.string().optional(),
   tenantId: z.string().optional(),
 });
 
@@ -26,7 +27,7 @@ router.post("/register", async (req: Request, res: Response) => {
     return res.status(400).json({ error: parsed.error.flatten() });
   }
 
-  const { email, password, name, tenantId } = parsed.data;
+  const { email, password, name, phone, tenantId } = parsed.data;
 
   if (!hasSupabaseEnv || !supabaseAdmin) {
     return res.status(400).json({
@@ -40,6 +41,7 @@ router.post("/register", async (req: Request, res: Response) => {
     email_confirm: true,
     user_metadata: {
       name: name || email.split("@")[0],
+      phone: phone || "",
       tenant_id: tenantId || "tenant-demo",
       plan_code: "emergency_7d",
       plan_status: "trial",
@@ -58,6 +60,7 @@ router.post("/register", async (req: Request, res: Response) => {
       id: data.user.id,
       email: data.user.email,
       name: data.user.user_metadata?.name || name || email.split("@")[0],
+      phone: data.user.user_metadata?.phone || phone || "",
       tenantId: data.user.user_metadata?.tenant_id || tenantId || "tenant-demo",
       planCode: plan.code,
       planStatus: data.user.user_metadata?.plan_status || "trial",

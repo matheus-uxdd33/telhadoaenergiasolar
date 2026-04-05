@@ -41,7 +41,7 @@ export default function DashboardPage() {
     loadDashboard();
   }, []);
 
-  if (loading) return <div className="loading-screen">Sincronizando dados com o inversor...</div>;
+  if (loading) return <div className="loading-screen">Sincronizando dados no servidor...</div>;
 
   const finalSummary = summary || {
     todayGeneration: 0,
@@ -49,13 +49,72 @@ export default function DashboardPage() {
     lastSync: new Date().toISOString()
   };
 
+  // Zero-State Onboarding Mockup Flow
+  // Mostramos isso se o resumo vier zerado (Novo Usuário)
+  const isZeroState = finalSummary.todayGeneration === 0 && finalSummary.monthGeneration === 0;
+
+  if (isZeroState) {
+    return (
+      <div style={{ padding: "60px 40px", minHeight: "100vh", background: "#060d18", color: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <style>{`
+          @keyframes slideUp { from { opacity:0; transform:translateY(20px)} to { opacity:1; transform:translateY(0)} }
+          .wiz-btn { transition: all 0.2s; }
+          .wiz-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(16,185,129,0.2) }
+        `}</style>
+
+        <div style={{ textAlign: "center", marginBottom: 40, animation: "slideUp 0.5s ease" }}>
+          <div style={{ width: 64, height: 64, borderRadius: 16, background: "rgba(16,185,129,0.1)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
+            <span style={{ fontSize: 32 }}>👋</span>
+          </div>
+          <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 12 }}>Olá de novo! Vamos começar.</h1>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", maxWidth: 500 }}>
+            Para monitorar sua usina e ver quanto você está economizando, precisamos conectar seu sistema à plataforma.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, maxWidth: 800, width: "100%", animation: "slideUp 0.6s ease" }}>
+          {/* Botao 1: QR Code */}
+          <div className="wiz-btn" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 24, padding: "40px 32px", textAlign: "center", cursor: "pointer", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: -50, right: -50, width: 150, height: 150, background: "radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)" }} />
+            <div style={{ fontSize: 48, marginBottom: 20 }}>📲</div>
+            <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Câmera do Celular</h3>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 24 }}>Aponte a câmera para o adesivo de QR Code lateral do Data Logger (Inversor).</p>
+            <button style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#10b981,#059669)", border: "none", borderRadius: 12, color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              Abrir Câmera
+            </button>
+          </div>
+
+          {/* Botao 2: Digitar S/N */}
+          <div className="wiz-btn" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 24, padding: "40px 32px", textAlign: "center", cursor: "pointer" }}>
+            <div style={{ fontSize: 48, marginBottom: 20 }}>⌨️</div>
+            <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Digitar Serial (S/N)</h3>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginBottom: 24 }}>Digite manualmente o número de série e a marca do seu inversor.</p>
+            <button style={{ width: "100%", padding: "14px", background: "transparent", border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: 12, color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              Digitar Código
+            </button>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 40, animation: "slideUp 0.7s ease" }}>
+          <a href="#" style={{ color: "#10b981", fontSize: 14, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }} onClick={e => {
+            e.preventDefault();
+            alert("O Número de Série (S/N) costuma ter de 10 a 16 caracteres alfanuméricos e fica localizado numa etiqueta colada na lateral ou em baixo do seu inversor solar.");
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Não sei onde encontrar o S/N do Inversor
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   const currentSavings = finalSummary.todayGeneration * kwhRate;
 
   return (
     <div className="dashboard-premium">
       <header className="premium-header">
         <div className="header-title">
-          <h1>{getGreeting()}, {simpleMode ? "sua usina está a todo vapor! 🚀" : "awqy! 👋"}</h1>
+          <h1>{getGreeting()}, {simpleMode ? "sua usina está a todo vapor! 🚀" : "Mestre Solar! 👋"}</h1>
           <p style={{ color: 'var(--text-light)', marginTop: '4px' }}>
             {simpleMode ? "Confira quanto você já economizou hoje." : "Monitoramento em tempo real do seu sistema solar."}
           </p>
@@ -99,7 +158,7 @@ export default function DashboardPage() {
               <div className="card-value large">
                 <span className="currency">R$</span> {currentSavings.toFixed(2)}
               </div>
-              <p className="simple-hint">Suficiente para manter sua geladeira ligada por 3 dias!</p>
+              <p className="simple-hint">Suficiente para manter uma geladeira ligada por 3 dias!</p>
             </div>
 
             <div className="premium-card">
@@ -174,7 +233,7 @@ export default function DashboardPage() {
                       cursor={{ fill: 'rgba(255,158,11,0.1)' }}
                       contentStyle={{ backgroundColor: '#111', border: 'none', borderRadius: '8px', color: '#fff' }}
                     />
-                    <Bar dataKey="value" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="value" fill="#10b981" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -186,7 +245,7 @@ export default function DashboardPage() {
                   <span className="icon">✓</span>
                   <div className="text">
                     <strong>Placas em temperatura ideal.</strong>
-                    <p>Monitoramento térmico estável.</p>
+                    <p>Monitoramento térmico estável no momento.</p>
                   </div>
                 </div>
               </div>

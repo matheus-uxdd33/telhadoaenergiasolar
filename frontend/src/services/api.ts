@@ -22,8 +22,8 @@ class ApiClient {
     });
   }
 
-  async register(email: string, password: string, name?: string) {
-    const res = await this.client.post("/auth/register", { email, password, name });
+  async register(email: string, password: string, name?: string, phone?: string) {
+    const res = await this.client.post("/auth/register", { email, password, name, phone });
     return res.data;
   }
 

@@ -9,19 +9,24 @@ import SystemPage from "./pages/System";
 import AlertsPage from "./pages/Alerts";
 import BillingPage from "./pages/Billing";
 import SupportPage from "./pages/Support";
-import RegisterPage from "./pages/Register";
 import ProfilePage from "./pages/Profile";
 import ProvisioningPage from "./pages/Provisioning";
+import { Toaster } from "react-hot-toast";
 import "./styles/layout.css";
 
 export default function App() {
   const isAuthenticated = useAuthStore((s: any) => s.isAuthenticated);
 
+  React.useEffect(() => {
+    useAuthStore.getState().initialize();
+  }, []);
+
   return (
     <Router>
+      <Toaster position="top-right" toastOptions={{ duration: 4000, style: { background: '#0a1428', color: '#fff', border: '1px solid #10b981' } }} />
       <Routes>
+        {/* Unificado: Login e Register em uma só Landing Page Modal */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
 
         {isAuthenticated ? (
           <Route
